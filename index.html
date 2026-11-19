@@ -7,14 +7,659 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=4" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-  <script src="app.js?v=4" defer></script>
+  <style>
+    :root {
+      --bg-page: #f9f9fb;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f3f4f6;
+      --border: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text-primary: #18181b;
+      --text-secondary: #6b7280;
+      --lavender-bg: #f5f3ff;
+      --lavender-border: #d8b4fe;
+      --lavender-text: #6b21a8;
+      --dark-pill: #18181b;
+      --danger: #dc2626;
+      --warn: #d97706;
+      --success: #059669;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.045), 0 1px 3px rgba(0, 0, 0, 0.03);
+      --shadow-chip: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Slim Left Navigation Rail */
+    .sidebar {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 8px;
+      gap: 24px;
+      background: var(--bg-page);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
+      color: #1e1b4b;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.05em;
+      box-shadow: 0 2px 8px rgba(192, 132, 252, 0.35);
+      user-select: none;
+    }
+
+    .rail-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .rail-item {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 6px;
+      width: 58px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .rail-item:hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+
+    /* Main Workspace */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+    }
+
+    .workspace-tag {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-dark-pill {
+      background: var(--dark-pill);
+      color: #ffffff;
+      border: 1px solid var(--dark-pill);
+      border-radius: 10px;
+      padding: 8px 15px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-dark-pill:hover { opacity: 0.88; }
+
+    .btn-light-pill {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-chip);
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-light-pill:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-strong);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f59e0b;
+    }
+
+    .status-dot.ready { background: #10b981; }
+
+    /* Centered Hero Section */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 20px 64px;
+    }
+
+    .hero-section {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .hero-section.compact { margin-top: 0; }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin: 0 0 26px;
+      text-align: center;
+    }
+
+    /* Large Rounded Prompt Box */
+    .prompt-card {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px 20px 14px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .prompt-card:focus-within {
+      border-color: #c4b5fd;
+      box-shadow: 0 6px 28px rgba(139, 92, 246, 0.08);
+    }
+
+    .attachment-bar { margin-bottom: 10px; }
+
+    .attachment-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .chip-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+
+    .chip-close:hover { color: var(--text-primary); }
+
+    .prompt-textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: vertical;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      min-height: 108px;
+      max-height: 360px;
+    }
+
+    .prompt-textarea::placeholder { color: var(--text-secondary); }
+
+    .prompt-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 6px;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+
+    /* Lavender Model Pill */
+    .magic-select-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--lavender-bg);
+      border: 1px solid var(--lavender-border);
+      color: var(--lavender-text);
+      border-radius: 999px;
+      padding: 5px 12px;
+      height: 34px;
+    }
+
+    .sparkle-icon {
+      color: #7c3aed;
+      flex-shrink: 0;
+    }
+
+    .magic-select-wrap select {
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      padding-right: 4px;
+    }
+
+    /* Circular Submit Arrow Button */
+    .submit-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #8e8e93;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .submit-circle.active { background: var(--dark-pill); }
+
+    .submit-circle:hover:not(:disabled) {
+      background: var(--dark-pill);
+      transform: translateY(-1px);
+    }
+
+    .submit-circle:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Quick-Action Pill Chips Row */
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .action-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow: var(--shadow-chip);
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .action-chip:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .action-chip svg { color: var(--text-secondary); }
+
+    /* Progress & Status */
+    .progress-wrap {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #7c3aed;
+      transition: width 0.25s ease;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .status.error {
+      color: var(--danger);
+      font-weight: 500;
+    }
+
+    /* Report Section */
+    .report-card {
+      width: 100%;
+      max-width: 860px;
+      margin-top: 28px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .report-header h2 {
+      margin: 0 0 2px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .muted-text {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .export-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 13px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+    }
+
+    .summaries-box {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .summaries-box p { margin: 4px 0; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .filter-pill {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--lavender-bg);
+      border-color: var(--lavender-border);
+      color: var(--lavender-text);
+      font-weight: 600;
+    }
+
+    .finding {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .finding-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .matched-word {
+      font-weight: 600;
+      color: var(--warn);
+      font-size: 14.5px;
+    }
+
+    .cat-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--lavender-bg);
+      color: var(--lavender-text);
+      border: 1px solid var(--lavender-border);
+    }
+
+    .detail-line {
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin: 4px 0;
+      color: var(--text-primary);
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+      display: inline-block;
+      min-width: 72px;
+    }
+
+    .rewrite-text {
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(24, 24, 27, 0.35);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .modal-wide { max-width: 600px; }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0 0 14px;
+      line-height: 1.5;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .modal-input:focus { border-color: #8b5cf6; }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-body {
+      max-height: 60vh;
+      overflow-y: auto;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: var(--bg-page);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      .sidebar { width: 56px; padding: 12px 4px; }
+      .rail-item span { display: none; }
+      .hero-title { font-size: 22px; }
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
-    <!-- Left Slim Navigation Rail -->
     <aside class="sidebar" aria-label="Primary navigation">
       <div class="brand-badge" title="AI Style Forensics">&gt;_&lt;</div>
 
@@ -55,12 +700,10 @@
       </nav>
     </aside>
 
-    <!-- Main Workspace -->
     <div class="workspace">
-      <!-- Top Right Action Pills -->
       <header class="topbar">
         <div class="topbar-left">
-          <span class="workspace-tag">Style Forensics</span>
+          <span class="workspace-tag">Article Studio</span>
         </div>
         <div class="topbar-right">
           <button type="button" class="btn-dark-pill" id="openKeyModalBtn">
@@ -71,13 +714,11 @@
         </div>
       </header>
 
-      <!-- Centered Hero & Prompt Card -->
       <main class="main-content" id="mainContainer">
         <section class="hero-section">
           <h1 class="hero-title">What manuscript can I audit?</h1>
 
           <div class="prompt-card">
-            <!-- Attached File Pill (Hidden until file uploaded) -->
             <div id="attachmentBar" class="attachment-bar hidden">
               <div class="attachment-chip">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -98,7 +739,6 @@
 
             <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf,.html,.htm" class="hidden" />
 
-            <!-- Bottom Card Toolbar -->
             <div class="prompt-toolbar">
               <div class="toolbar-left">
                 <button type="button" class="icon-btn" id="attachBtn" title="Attach local manuscript (.docx, .pdf, .md, .txt, .html)">
@@ -117,7 +757,6 @@
               </div>
 
               <div class="toolbar-right">
-                <!-- Lavender Model Selector Pill (inspired by Magic pill) -->
                 <div class="magic-select-wrap" title="Choose Gemini model">
                   <svg class="sparkle-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z" />
@@ -128,7 +767,6 @@
                   </select>
                 </div>
 
-                <!-- Circular Submit Arrow Button -->
                 <button type="button" class="submit-circle" id="analyzeBtn" title="Run AI Style Audit">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="19" x2="12" y2="5" />
@@ -139,7 +777,6 @@
             </div>
           </div>
 
-          <!-- Action Pill Chips Row -->
           <div class="quick-chips">
             <button type="button" class="action-chip" data-action="audit">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -187,14 +824,12 @@
             </button>
           </div>
 
-          <!-- Progress & Status Feedback -->
           <div id="progressWrap" class="progress-wrap hidden">
             <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
           </div>
           <div id="statusMsg" class="status"></div>
         </section>
 
-        <!-- Audit Report Card -->
         <section id="reportSection" class="report-card hidden">
           <div class="report-header">
             <div>
@@ -216,7 +851,6 @@
     </div>
   </div>
 
-  <!-- API Key Modal -->
   <div id="apiKeyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
       <div class="modal-head">
@@ -234,7 +868,6 @@
     </div>
   </div>
 
-  <!-- History & Rubric Drawer Modal -->
   <div id="infoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-card modal-wide">
       <div class="modal-head">
@@ -244,5 +877,577 @@
       <div id="infoModalBody" class="modal-body"></div>
     </div>
   </div>
+
+  <script>
+    const SYSTEM_INSTRUCTION = `
+You are an editorial forensics analyst specializing in identifying writing patterns commonly favored by Large Language Models and flagged by AI detectors.
+
+Analyze the provided manuscript text and extract EVERY instance of the following categories:
+
+1. Overused AI Buzzwords & Inflated Words:
+   - Inflated Verb: e.g., delve, underscore, leverage, foster, spearhead, streamline, bolster, elevate, harness, navigate, unlock, revolutionize, catalyze, optimize.
+   - Inflated Adjective: e.g., pivotal, transformative, seamless, robust, intricate, multifaceted, comprehensive, groundbreaking, holistic, paramount, nuanced, cutting-edge, dynamic.
+   - Inflated Noun: e.g., tapestry, testament, landscape, paradigm, synergy, realm, cornerstone, catalyst, mosaic, beacon, interplay, ecosystem.
+   - Inflated Adverb: e.g., meticulously, seamlessly, profoundly, inherently, undeniably, tirelessly, fundamentally, exponentially.
+
+2. Formulaic Transitions & Stock Phrases:
+   - Sentence-Initial Adverb: Repetitive sentence openers such as "Furthermore,", "Moreover,", "Additionally,", "Consequently,", "Notably,", "Ultimately,", "Essentially,", "Conversely,", "Interestingly,".
+   - Rigid List Signpost: Mechanical structural markers such as "Firstly,", "Secondly,", "Lastly,", "On one hand,", "On the other hand,", "In summary,", "To conclude,", "Key takeaways include:".
+   - Filler Phrase: Empty throat-clearing phrases such as "It is important to note that", "In today's fast-paced digital landscape", "When it comes to", "A testament to", "Plays a crucial role in", "At the end of the day", "It goes without saying".
+
+3. Disembodied / Automated Phrasing:
+   - Passive voice constructions or sentences where software, algorithms, frameworks, tools, or abstract concepts perform human cognitive or physical actions without human agency (e.g., "The platform empowers organizations to...", "Data-driven insights dictate...", "Solutions are leveraged to drive...", "The framework facilitates seamless collaboration...").
+
+Rules:
+- Quote matched_phrase and sentence_context verbatim from the input text.
+- Do not invent examples that do not appear in the manuscript.
+- Provide crisp, natural, concrete rewrites in human_rewrite that restore human subjects and plain verbs.
+`;
+
+    const SAMPLE_ARTICLE = `In today's fast-paced digital landscape, organizations must seamlessly leverage cutting-edge analytics to unlock transformative growth. Furthermore, it is important to note that modern software ecosystems play a crucial role in fostering synergy across multifaceted teams. Firstly, the platform empowers stakeholders to delve into intricate datasets without manual intervention. Moreover, actionable insights are meticulously generated by the algorithm to bolster decision-making. Ultimately, this robust paradigm serves as a testament to how automation elevates operational efficiency across the entire enterprise.`;
+
+    const RESPONSE_SCHEMA = {
+      type: "OBJECT",
+      properties: {
+        ai_style_score: { type: "INTEGER" },
+        section_summary: { type: "STRING" },
+        findings: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              category: {
+                type: "STRING",
+                enum: [
+                  "Inflated Verb",
+                  "Inflated Adjective",
+                  "Inflated Noun",
+                  "Inflated Adverb",
+                  "Sentence-Initial Adverb",
+                  "Rigid List Signpost",
+                  "Filler Phrase",
+                  "Disembodied / Passive Agency"
+                ]
+              },
+              matched_phrase: { type: "STRING" },
+              sentence_context: { type: "STRING" },
+              reason: { type: "STRING" },
+              human_rewrite: { type: "STRING" }
+            },
+            required: ["category", "matched_phrase", "sentence_context", "reason", "human_rewrite"]
+          }
+        }
+      },
+      required: ["ai_style_score", "section_summary", "findings"]
+    };
+
+    const apiKeyInput = document.getElementById("apiKey");
+    const keyStatusDot = document.getElementById("keyStatusDot");
+    const keyStatusLabel = document.getElementById("keyStatusLabel");
+    const modelSelect = document.getElementById("modelSelect");
+    const fileInput = document.getElementById("fileInput");
+    const attachmentBar = document.getElementById("attachmentBar");
+    const fileMeta = document.getElementById("fileMeta");
+    const manuscriptText = document.getElementById("manuscriptText");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const statusMsg = document.getElementById("statusMsg");
+    const progressWrap = document.getElementById("progressWrap");
+    const progressFill = document.getElementById("progressFill");
+    const reportSection = document.getElementById("reportSection");
+    const reportStats = document.getElementById("reportStats");
+    const scoreBadge = document.getElementById("scoreBadge");
+    const sectionSummaries = document.getElementById("sectionSummaries");
+    const filterBar = document.getElementById("filterBar");
+    const findingsList = document.getElementById("findingsList");
+    const heroSection = document.querySelector(".hero-section");
+
+    const apiKeyModal = document.getElementById("apiKeyModal");
+    const infoModal = document.getElementById("infoModal");
+    const infoModalTitle = document.getElementById("infoModalTitle");
+    const infoModalBody = document.getElementById("infoModalBody");
+
+    let currentReport = null;
+    let currentFileName = "manuscript";
+    let activeCategory = "All";
+    let pendingFilterGroup = null;
+
+    const CATEGORY_GROUPS = {
+      buzzwords: ["Inflated Verb", "Inflated Adjective", "Inflated Noun", "Inflated Adverb"],
+      transitions: ["Sentence-Initial Adverb", "Rigid List Signpost", "Filler Phrase"],
+      passive: ["Disembodied / Passive Agency"]
+    };
+
+    function syncKeyIndicator() {
+      const key = localStorage.getItem("gemini_manuscript_api_key") || "";
+      apiKeyInput.value = key;
+      if (key.trim()) {
+        keyStatusDot.classList.add("ready");
+        keyStatusLabel.textContent = "API Key Ready";
+      } else {
+        keyStatusDot.classList.remove("ready");
+        keyStatusLabel.textContent = "Set API Key";
+      }
+    }
+
+    function syncSubmitState() {
+      analyzeBtn.classList.toggle("active", manuscriptText.value.trim().length > 0);
+    }
+
+    syncKeyIndicator();
+    syncSubmitState();
+
+    manuscriptText.addEventListener("input", syncSubmitState);
+
+    document.getElementById("openKeyModalBtn").addEventListener("click", () => {
+      apiKeyModal.classList.remove("hidden");
+      apiKeyInput.focus();
+    });
+
+    document.getElementById("closeKeyModalBtn").addEventListener("click", () => {
+      apiKeyModal.classList.add("hidden");
+    });
+
+    document.getElementById("saveKeyBtn").addEventListener("click", () => {
+      localStorage.setItem("gemini_manuscript_api_key", apiKeyInput.value.trim());
+      syncKeyIndicator();
+      apiKeyModal.classList.add("hidden");
+      setStatus("API key saved in browser localStorage.");
+    });
+
+    document.getElementById("clearKeyBtn").addEventListener("click", () => {
+      localStorage.removeItem("gemini_manuscript_api_key");
+      apiKeyInput.value = "";
+      syncKeyIndicator();
+      apiKeyModal.classList.add("hidden");
+      setStatus("API key removed from browser.");
+    });
+
+    document.getElementById("closeInfoModalBtn").addEventListener("click", () => {
+      infoModal.classList.add("hidden");
+    });
+
+    [apiKeyModal, infoModal].forEach(modal => {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.add("hidden");
+      });
+    });
+
+    function getActiveModelId() {
+      const selected = modelSelect.value.replace(/^models\//, "").trim();
+      if (selected === "gemini-2.5-flash") return "gemini-3.8-flash";
+      if (selected === "gemini-2.5-pro") return "gemini-3.1-pro-preview";
+      return selected;
+    }
+
+    function setStatus(msg, isError = false) {
+      statusMsg.textContent = msg;
+      statusMsg.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    document.getElementById("attachBtn").addEventListener("click", () => fileInput.click());
+
+    document.getElementById("removeFileBtn").addEventListener("click", () => {
+      fileInput.value = "";
+      attachmentBar.classList.add("hidden");
+      currentFileName = "manuscript";
+    });
+
+    fileInput.addEventListener("change", async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      currentFileName = file.name.replace(/\.[^/.]+$/, "");
+      const ext = file.name.split(".").pop().toLowerCase();
+      setStatus(`Reading "${file.name}"...`);
+
+      try {
+        let extractedText = "";
+
+        if (ext === "txt" || ext === "md") {
+          extractedText = await file.text();
+        } else if (ext === "html" || ext === "htm") {
+          const rawHtml = await file.text();
+          const doc = new DOMParser().parseFromString(rawHtml, "text/html");
+          doc.querySelectorAll("script, style, nav, footer, header, aside").forEach(el => el.remove());
+          extractedText = doc.body?.innerText || "";
+        } else if (ext === "docx") {
+          if (!window.mammoth) throw new Error("DOCX parser library failed to load.");
+          const arrayBuffer = await file.arrayBuffer();
+          const result = await window.mammoth.extractRawText({ arrayBuffer });
+          extractedText = result.value;
+        } else if (ext === "pdf") {
+          if (!window.pdfjsLib) throw new Error("PDF parser library failed to load.");
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          const pages = [];
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            pages.push(content.items.map(item => item.str).join(" "));
+          }
+          extractedText = pages.join("\n\n");
+        } else {
+          throw new Error(`Unsupported format ".${ext}".`);
+        }
+
+        manuscriptText.value = extractedText.trim();
+        const words = manuscriptText.value.split(/\s+/).filter(Boolean).length;
+        fileMeta.textContent = `${file.name} (${words.toLocaleString()} words)`;
+        attachmentBar.classList.remove("hidden");
+        syncSubmitState();
+        setStatus("Manuscript attached. Click the arrow button to run the audit.");
+      } catch (err) {
+        setStatus(`Could not read file: ${err.message}`, true);
+      }
+    });
+
+    function loadSampleText() {
+      currentFileName = "sample_manuscript";
+      manuscriptText.value = SAMPLE_ARTICLE;
+      fileMeta.textContent = "sample_manuscript.txt (83 words)";
+      attachmentBar.classList.remove("hidden");
+      syncSubmitState();
+      setStatus("Sample draft loaded.");
+    }
+
+    function resetWorkspace() {
+      manuscriptText.value = "";
+      fileInput.value = "";
+      currentFileName = "manuscript";
+      currentReport = null;
+      pendingFilterGroup = null;
+      attachmentBar.classList.add("hidden");
+      reportSection.classList.add("hidden");
+      progressWrap.classList.add("hidden");
+      heroSection.classList.remove("compact");
+      syncSubmitState();
+      setStatus("");
+    }
+
+    document.getElementById("topSampleBtn").addEventListener("click", loadSampleText);
+    document.getElementById("clearBtn").addEventListener("click", resetWorkspace);
+    document.getElementById("navNewBtn").addEventListener("click", resetWorkspace);
+
+    document.getElementById("navHistoryBtn").addEventListener("click", () => {
+      const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+      infoModalTitle.textContent = "Recent Local Audits";
+      if (history.length === 0) {
+        infoModalBody.innerHTML = "<p>No saved audits in this browser yet. Run an audit to save it here automatically.</p>";
+      } else {
+        infoModalBody.innerHTML = history.map((entry, idx) => `
+          <div class="history-item">
+            <div>
+              <strong style="color: var(--text-primary);">${escapeHtml(entry.manuscript)}</strong>
+              <div style="font-size: 12px;">${entry.total_words.toLocaleString()} words • ${entry.total_findings} flags • Score ${entry.overall_ai_style_score}/100</div>
+            </div>
+            <button type="button" class="btn-light-pill" onclick="loadHistoryReport(${idx})">Open</button>
+          </div>
+        `).join("");
+      }
+      infoModal.classList.remove("hidden");
+    });
+
+    window.loadHistoryReport = (idx) => {
+      const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+      if (!history[idx]) return;
+      currentReport = history[idx];
+      currentFileName = currentReport.manuscript;
+      activeCategory = "All";
+      infoModal.classList.add("hidden");
+      renderReport();
+    };
+
+    document.getElementById("navRubricBtn").addEventListener("click", () => {
+      infoModalTitle.textContent = "AI Style Detection Rubric";
+      infoModalBody.innerHTML = `
+        <p><strong>1. Overused AI Buzzwords &amp; Inflated Words</strong><br>
+        Flags inflated verbs (<em>delve, underscore, leverage, foster</em>), adjectives (<em>pivotal, transformative, seamless, robust</em>), nouns (<em>tapestry, testament, landscape, paradigm</em>), and adverbs (<em>meticulously, seamlessly, profoundly</em>).</p>
+        <p><strong>2. Formulaic Transitions &amp; Stock Phrases</strong><br>
+        Flags repetitive sentence-initial adverbs (<em>Furthermore, Moreover, Additionally</em>), rigid list signposts (<em>Firstly, Secondly, In summary</em>), and filler phrases (<em>It is important to note that, In today's fast-paced digital landscape</em>).</p>
+        <p><strong>3. Disembodied / Automated Phrasing</strong><br>
+        Flags passive constructions or sentences where software, algorithms, or abstract frameworks perform human actions without human agency.</p>
+      `;
+      infoModal.classList.remove("hidden");
+    });
+
+    document.getElementById("navExportBtn").addEventListener("click", () => {
+      if (!currentReport) {
+        setStatus("Run an audit first before exporting.", true);
+        return;
+      }
+      document.getElementById("downloadMdBtn").click();
+    });
+
+    document.querySelectorAll(".action-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const action = chip.dataset.action;
+        if (action === "sample") {
+          loadSampleText();
+          return;
+        }
+        if (action === "audit") {
+          pendingFilterGroup = null;
+          runAudit();
+          return;
+        }
+        if (currentReport) {
+          activeCategory = `GROUP:${action}`;
+          renderReport();
+          reportSection.scrollIntoView({ behavior: "smooth" });
+        } else {
+          pendingFilterGroup = `GROUP:${action}`;
+          runAudit();
+        }
+      });
+    });
+
+    function chunkManuscript(text, maxWords = 2000) {
+      const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      const chunks = [];
+      let current = [];
+      let currentWords = 0;
+
+      for (const para of paragraphs) {
+        const words = para.split(/\s+/).length;
+        if (current.length > 0 && currentWords + words > maxWords) {
+          chunks.push(current.join("\n\n"));
+          current = [para];
+          currentWords = words;
+        } else {
+          current.push(para);
+          currentWords += words;
+        }
+      }
+      if (current.length > 0) chunks.push(current.join("\n\n"));
+      return chunks;
+    }
+
+    analyzeBtn.addEventListener("click", () => {
+      pendingFilterGroup = null;
+      runAudit();
+    });
+
+    async function runAudit() {
+      const apiKey = (localStorage.getItem("gemini_manuscript_api_key") || apiKeyInput.value).trim();
+      const text = manuscriptText.value.trim();
+      const model = getActiveModelId();
+
+      if (!apiKey) {
+        apiKeyModal.classList.remove("hidden");
+        apiKeyInput.focus();
+        setStatus("Please enter your Gemini API key first.", true);
+        return;
+      }
+      if (!text) {
+        setStatus("Paste manuscript text or attach a file first.", true);
+        return;
+      }
+
+      analyzeBtn.disabled = true;
+      progressWrap.classList.remove("hidden");
+      progressFill.style.width = "0%";
+
+      const chunks = chunkManuscript(text);
+      const allFindings = [];
+      const summaries = [];
+      let weightedScoreSum = 0;
+      let totalWords = 0;
+
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+
+        for (let i = 0; i < chunks.length; i++) {
+          const sectionNum = i + 1;
+          const chunkWords = Math.max(1, chunks[i].split(/\s+/).length);
+          setStatus(`Auditing section ${sectionNum} of ${chunks.length} (${chunkWords.toLocaleString()} words) using ${model}...`);
+
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey
+            },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: SYSTEM_INSTRUCTION }]
+              },
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `Analyze section ${sectionNum} of ${chunks.length} from this manuscript for AI-favored words, transitions, filler phrases, and disembodied phrasing:\n\n${chunks[i]}`
+                    }
+                  ]
+                }
+              ],
+              generationConfig: {
+                temperature: 0.1,
+                responseMimeType: "application/json",
+                responseSchema: RESPONSE_SCHEMA
+              }
+            })
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            const msg = data?.error?.message || `HTTP ${response.status}`;
+            throw new Error(msg);
+          }
+
+          const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!rawJson) throw new Error(`Empty response on section ${sectionNum}.`);
+
+          const parsed = JSON.parse(rawJson);
+          weightedScoreSum += parsed.ai_style_score * chunkWords;
+          totalWords += chunkWords;
+          summaries.push(`Section ${sectionNum}: ${parsed.section_summary}`);
+
+          for (const item of parsed.findings) {
+            allFindings.push({ section: sectionNum, ...item });
+          }
+
+          progressFill.style.width = `${Math.round((sectionNum / chunks.length) * 100)}%`;
+        }
+
+        currentReport = {
+          manuscript: currentFileName,
+          overall_ai_style_score: Math.round(weightedScoreSum / Math.max(1, totalWords)),
+          total_words: totalWords,
+          total_findings: allFindings.length,
+          section_summaries: summaries,
+          findings: allFindings
+        };
+
+        const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+        history.unshift(currentReport);
+        localStorage.setItem("gemini_audit_history", JSON.stringify(history.slice(0, 10)));
+
+        activeCategory = pendingFilterGroup || "All";
+        renderReport();
+        setStatus("Audit complete.");
+      } catch (err) {
+        setStatus(`Audit failed: ${err.message}`, true);
+      } finally {
+        analyzeBtn.disabled = false;
+      }
+    }
+
+    function renderReport() {
+      if (!currentReport) return;
+
+      heroSection.classList.add("compact");
+      reportSection.classList.remove("hidden");
+
+      const score = currentReport.overall_ai_style_score;
+      scoreBadge.textContent = `AI Style Score: ${score}/100`;
+      scoreBadge.style.color = score >= 65 ? "var(--danger)" : score >= 35 ? "var(--warn)" : "var(--success)";
+
+      reportStats.textContent = `${currentReport.total_words.toLocaleString()} words audited • ${currentReport.total_findings} flagged instance(s)`;
+
+      sectionSummaries.innerHTML = currentReport.section_summaries
+        .map(s => `<p>${escapeHtml(s)}</p>`)
+        .join("");
+
+      const categories = ["All", ...new Set(currentReport.findings.map(f => f.category))];
+      filterBar.innerHTML = "";
+      categories.forEach(cat => {
+        const count = cat === "All"
+          ? currentReport.findings.length
+          : currentReport.findings.filter(f => f.category === cat).length;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `filter-pill ${activeCategory === cat ? "active" : ""}`;
+        btn.textContent = `${cat} (${count})`;
+        btn.addEventListener("click", () => {
+          activeCategory = cat;
+          renderReport();
+        });
+        filterBar.appendChild(btn);
+      });
+
+      let visible = currentReport.findings;
+      if (activeCategory.startsWith("GROUP:")) {
+        const groupKey = activeCategory.split(":")[1];
+        const allowed = CATEGORY_GROUPS[groupKey] || [];
+        visible = currentReport.findings.filter(f => allowed.includes(f.category));
+      } else if (activeCategory !== "All") {
+        visible = currentReport.findings.filter(f => f.category === activeCategory);
+      }
+
+      findingsList.innerHTML = visible.length === 0
+        ? `<p class="muted-text">No instances flagged in this category.</p>`
+        : visible.map((item, idx) => `
+          <div class="finding">
+            <div class="finding-top">
+              <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
+              <span class="cat-tag">Sec ${item.section} • ${escapeHtml(item.category)}</span>
+            </div>
+            <div class="detail-line"><span class="detail-label">Original:</span> ${escapeHtml(item.sentence_context)}</div>
+            <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
+            <div class="detail-line rewrite-text"><span class="detail-label">Rewrite:</span> ${escapeHtml(item.human_rewrite)}</div>
+          </div>
+        `).join("");
+    }
+
+    function triggerDownload(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("downloadJsonBtn").addEventListener("click", () => {
+      if (!currentReport) return;
+      triggerDownload(
+        JSON.stringify(currentReport, null, 2),
+        `${currentFileName}_ai_audit.json`,
+        "application/json"
+      );
+    });
+
+    document.getElementById("downloadMdBtn").addEventListener("click", () => {
+      if (!currentReport) return;
+      const lines = [
+        `# AI Style & Phrasing Audit: \`${currentReport.manuscript}\``,
+        "",
+        `- **Overall AI Style Score:** ${currentReport.overall_ai_style_score}/100`,
+        `- **Word Count:** ${currentReport.total_words.toLocaleString()}`,
+        `- **Flagged Instances:** ${currentReport.total_findings}`,
+        "",
+        "## Section Summaries",
+        ""
+      ];
+
+      currentReport.section_summaries.forEach(s => lines.push(`- ${s}`));
+      lines.push("", "## Flagged Phrases & Human Rewrites", "");
+
+      currentReport.findings.forEach((f, idx) => {
+        lines.push(
+          `### ${idx + 1}. [${f.category}] \`${f.matched_phrase}\` (Section ${f.section})`,
+          `- **Original:** ${f.sentence_context}`,
+          `- **Why flagged:** ${f.reason}`,
+          `- **Suggested rewrite:** ${f.human_rewrite}`,
+          ""
+        );
+      });
+
+      triggerDownload(lines.join("\n"), `${currentFileName}_ai_audit.md`, "text/markdown");
+    });
+  </script>
 </body>
 </html>
