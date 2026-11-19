@@ -62,6 +62,7 @@ const RESPONSE_SCHEMA = {
 
 const apiKeyInput = document.getElementById("apiKey");
 const modelSelect = document.getElementById("modelSelect");
+const customModelInput = document.getElementById("customModel");
 const fileInput = document.getElementById("fileInput");
 const fileMeta = document.getElementById("fileMeta");
 const manuscriptText = document.getElementById("manuscriptText");
@@ -80,13 +81,31 @@ let currentReport = null;
 let currentFileName = "manuscript";
 let activeCategory = "All";
 
-// Restore saved API key from browser localStorage
 const savedKey = localStorage.getItem("gemini_manuscript_api_key");
 if (savedKey) apiKeyInput.value = savedKey;
 
 apiKeyInput.addEventListener("input", () => {
   localStorage.setItem("gemini_manuscript_api_key", apiKeyInput.value.trim());
 });
+
+if (customModelInput) {
+  modelSelect.addEventListener("change", () => {
+    customModelInput.classList.toggle("hidden", modelSelect.value !== "custom");
+  });
+}
+
+function getActiveModelId() {
+  let selected = modelSelect.value;
+  if (selected === "custom" && customModelInput) {
+    selected = customModelInput.value.trim() || "gemini-3.8-flash";
+  }
+  selected = selected.replace(/^models\//, "").trim();
+
+  // Auto-upgrade legacy 2.5 IDs if an older page version is cached
+  if (selected === "gemini-2.5-flash") return "gemini-3.8-flash";
+  if (selected === "gemini-2.5-pro") return "gemini-3.1-pro-preview";
+  return selected;
+}
 
 function setStatus(msg, isError = false) {
   statusMsg.textContent = msg;
@@ -102,7 +121,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-// Local file parsing (.txt, .md, .html, .docx, .pdf)
 fileInput.addEventListener("change", async (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
@@ -168,7 +186,6 @@ document.getElementById("clearBtn").addEventListener("click", () => {
   setStatus("");
 });
 
-// Split long manuscripts along paragraph boundaries (~2,000 words per chunk)
 function chunkManuscript(text, maxWords = 2000) {
   const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
   const chunks = [];
@@ -193,7 +210,7 @@ function chunkManuscript(text, maxWords = 2000) {
 analyzeBtn.addEventListener("click", async () => {
   const apiKey = apiKeyInput.value.trim();
   const text = manuscriptText.value.trim();
-  const model = modelSelect.value;
+  const model = getActiveModelId();
 
   if (!apiKey) {
     setStatus("Enter your Gemini API key above before auditing.", true);
