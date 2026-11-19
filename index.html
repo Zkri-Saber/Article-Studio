@@ -3,604 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Style &amp; Phrasing Forensics</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-alt: #0b1120;
-      --border: #334155;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-hover: #0284c7;
-      --danger: #f87171;
-      --warn: #fbbf24;
-      --success: #34d399;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2rem 1.25rem 4rem;
-    }
-
-    header {
-      margin-bottom: 1.75rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-
-    h1 {
-      margin: 0 0 0.35rem;
-      font-size: 1.65rem;
-      letter-spacing: -0.02em;
-    }
-
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 1rem;
-    }
-
-    @media (max-width: 700px) {
-      .grid-2 { grid-template-columns: 1fr; }
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      color: var(--muted);
-    }
-
-    input[type="password"],
-    input[type="text"],
-    input[type="url"],
-    select,
-    textarea {
-      width: 100%;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      padding: 0.65rem 0.8rem;
-      font-size: 0.95rem;
-      font-family: inherit;
-    }
-
-    textarea {
-      min-height: 200px;
-      resize: vertical;
-      line-height: 1.55;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .url-row {
-      display: flex;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 1rem;
-      align-items: center;
-    }
-
-    button {
-      background: var(--accent);
-      color: #082f49;
-      border: none;
-      border-radius: 6px;
-      padding: 0.65rem 1.15rem;
-      font-weight: 700;
-      font-size: 0.92rem;
-      cursor: pointer;
-      transition: background 0.15s ease;
-    }
-
-    button:hover:not(:disabled) {
-      background: var(--accent-hover);
-      color: #fff;
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    button.secondary {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    button.secondary:hover:not(:disabled) {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: transparent;
-    }
-
-    .hint {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 0.35rem;
-    }
-
-    .status {
-      margin-top: 0.75rem;
-      font-size: 0.9rem;
-      color: var(--accent);
-    }
-
-    .status.error {
-      color: var(--danger);
-    }
-
-    .summary-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .score-badge {
-      font-size: 1.35rem;
-      font-weight: 800;
-      padding: 0.4rem 0.9rem;
-      border-radius: 8px;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-    }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      margin: 1rem 0;
-    }
-
-    .filter-pill {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .filter-pill.active {
-      background: var(--accent);
-      color: #082f49;
-      border-color: var(--accent);
-    }
-
-    .finding {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--warn);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .finding-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .cat-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0.2rem 0.55rem;
-      border-radius: 4px;
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent);
-    }
-
-    .matched-word {
-      font-weight: 700;
-      color: var(--warn);
-      font-size: 1rem;
-    }
-
-    .detail-line {
-      font-size: 0.9rem;
-      margin: 0.4rem 0;
-    }
-
-    .detail-label {
-      color: var(--muted);
-      font-weight: 600;
-      display: inline-block;
-      min-width: 74px;
-    }
-
-    .rewrite-text {
-      color: var(--success);
-    }
-
-    .hidden { display: none; }
-  </style>
+  <title>AI Manuscript &amp; Style Forensics</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Client-side DOCX and PDF parsers -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>AI Style &amp; Phrasing Forensics</h1>
+      <h1>AI Manuscript &amp; Style Forensics</h1>
       <p class="subtitle">
-        Audit articles for inflated buzzwords, formulaic transitions, filler phrases, and passive agency using Gemini.
+        Audit local manuscripts or pasted drafts for inflated AI buzzwords, formulaic transitions, filler phrases, and passive agency.
       </p>
     </header>
 
-    <div class="card">
+    <section class="card">
       <div class="grid-2">
         <div>
-          <label for="apiKey">Gemini API Key (stored locally in your browser)</label>
-          <input type="password" id="apiKey" placeholder="AIzaSy..." autocomplete="off" />
-          <div class="hint">Never commit your API key to GitHub. Restrict it to your GitHub Pages domain in Google AI Studio.</div>
+          <label for="apiKey">Gemini API Key (saved locally in your browser)</label>
+          <input type="password" id="apiKey" placeholder="AQ.... or AIzaSy..." autocomplete="off" />
+          <p class="hint">Stored only in your browser's <code>localStorage</code>. Never committed to GitHub.</p>
         </div>
         <div>
           <label for="modelSelect">Gemini Model</label>
           <select id="modelSelect">
-            <option value="gemini-2.5-flash" selected>gemini-2.5-flash (Fast &amp; Recommended)</option>
-            <option value="gemini-2.5-pro">gemini-2.5-pro (Deep Analysis)</option>
+            <option value="gemini-2.5-flash" selected>gemini-2.5-flash (Fast &amp; Cost-Effective)</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro (Deep Editorial Review)</option>
           </select>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <label for="articleUrl">Fetch Article from URL (Optional)</label>
-      <div class="url-row">
-        <input type="url" id="articleUrl" placeholder="https://example.com/blog/post" />
-        <button type="button" class="secondary" id="fetchBtn">Fetch Article</button>
+    <section class="card">
+      <div class="file-bar">
+        <div>
+          <label for="fileInput">Upload Local Manuscript (.docx, .pdf, .md, .txt, .html)</label>
+          <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf,.html,.htm" />
+        </div>
+        <div id="fileMeta" class="file-meta">No file selected</div>
       </div>
 
-      <label for="articleText">Article Text to Audit</label>
-      <textarea id="articleText" placeholder="Paste article text here or fetch from a URL above..."></textarea>
+      <label for="manuscriptText">Manuscript Text</label>
+      <textarea id="manuscriptText" placeholder="Upload a manuscript file above or paste your text directly here..."></textarea>
 
       <div class="btn-row">
-        <button type="button" id="analyzeBtn">Analyze Article</button>
+        <button type="button" id="analyzeBtn">Audit Manuscript</button>
         <button type="button" class="secondary" id="sampleBtn">Load Sample Text</button>
         <button type="button" class="secondary" id="clearBtn">Clear</button>
       </div>
-      <div id="statusMsg" class="status"></div>
-    </div>
 
-    <div id="reportSection" class="card hidden">
+      <div id="progressWrap" class="progress-wrap hidden">
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+      <div id="statusMsg" class="status"></div>
+    </section>
+
+    <section id="reportSection" class="card hidden">
       <div class="summary-header">
         <div>
-          <h2 style="margin: 0 0 0.25rem; font-size: 1.25rem;">Audit Report</h2>
-          <div id="findingCount" class="hint" style="margin: 0;"></div>
+          <h2>Audit Report</h2>
+          <p id="reportStats" class="hint"></p>
         </div>
-        <div style="display: flex; gap: 0.65rem; align-items: center;">
+        <div class="export-group">
           <div id="scoreBadge" class="score-badge">Score: --/100</div>
-          <button type="button" class="secondary" id="downloadJsonBtn">Download JSON</button>
+          <button type="button" class="secondary" id="downloadMdBtn">Export .MD</button>
+          <button type="button" class="secondary" id="downloadJsonBtn">Export .JSON</button>
         </div>
       </div>
 
-      <p id="diagnosisText" style="margin-top: 0.5rem;"></p>
-
+      <div id="sectionSummaries" class="summaries-box"></div>
       <div id="filterBar" class="filters"></div>
       <div id="findingsList"></div>
-    </div>
+    </section>
   </div>
-
-  <script>
-    const SYSTEM_INSTRUCTION = `
-You are an editorial forensics analyst specializing in identifying writing patterns commonly favored by Large Language Models and flagged by AI detectors.
-
-Analyze the provided article text and extract EVERY instance of the following categories:
-
-1. Overused AI Buzzwords & Inflated Words:
-   - Inflated Verb: e.g., delve, underscore, leverage, foster, spearhead, streamline, bolster, elevate, harness, navigate, unlock, revolutionize, catalyze, optimize.
-   - Inflated Adjective: e.g., pivotal, transformative, seamless, robust, intricate, multifaceted, comprehensive, groundbreaking, holistic, paramount, nuanced, cutting-edge, dynamic.
-   - Inflated Noun: e.g., tapestry, testament, landscape, paradigm, synergy, realm, cornerstone, catalyst, mosaic, beacon, interplay, ecosystem.
-   - Inflated Adverb: e.g., meticulously, seamlessly, profoundly, inherently, undeniably, tirelessly, fundamentally, exponentially.
-
-2. Formulaic Transitions & Stock Phrases:
-   - Sentence-Initial Adverb: Repetitive sentence openers such as "Furthermore,", "Moreover,", "Additionally,", "Consequently,", "Notably,", "Ultimately,", "Essentially,", "Conversely,", "Interestingly,".
-   - Rigid List Signpost: Mechanical structural markers such as "Firstly,", "Secondly,", "Lastly,", "On one hand,", "On the other hand,", "In summary,", "To conclude,", "Key takeaways include:".
-   - Filler Phrase: Empty throat-clearing phrases such as "It is important to note that", "In today's fast-paced digital landscape", "When it comes to", "A testament to", "Plays a crucial role in", "At the end of the day", "It goes without saying".
-
-3. Disembodied / Automated Phrasing:
-   - Passive voice constructions or sentences where software, algorithms, frameworks, tools, or abstract concepts perform human cognitive or physical actions without human agency (e.g., "The platform empowers organizations to...", "Data-driven insights dictate...", "Solutions are leveraged to drive...", "The framework facilitates seamless collaboration...").
-
-Rules:
-- Quote matched_phrase and sentence_context verbatim from the input text.
-- Do not invent examples that do not appear in the text.
-- Provide crisp, natural, concrete rewrites in human_rewrite that restore human subjects and plain verbs.
-`;
-
-    const SAMPLE_ARTICLE = `In today's fast-paced digital landscape, organizations must seamlessly leverage cutting-edge analytics to unlock transformative growth. Furthermore, it is important to note that modern software ecosystems play a crucial role in fostering synergy across multifaceted teams. Firstly, the platform empowers stakeholders to delve into intricate datasets without manual intervention. Moreover, actionable insights are meticulously generated by the algorithm to bolster decision-making. Ultimately, this robust paradigm serves as a testament to how automation elevates operational efficiency across the entire enterprise.`;
-
-    const RESPONSE_SCHEMA = {
-      type: "OBJECT",
-      properties: {
-        overall_ai_style_score: { type: "INTEGER" },
-        executive_diagnosis: { type: "STRING" },
-        findings: {
-          type: "ARRAY",
-          items: {
-            type: "OBJECT",
-            properties: {
-              category: {
-                type: "STRING",
-                enum: [
-                  "Inflated Verb",
-                  "Inflated Adjective",
-                  "Inflated Noun",
-                  "Inflated Adverb",
-                  "Sentence-Initial Adverb",
-                  "Rigid List Signpost",
-                  "Filler Phrase",
-                  "Disembodied / Passive Agency"
-                ]
-              },
-              matched_phrase: { type: "STRING" },
-              sentence_context: { type: "STRING" },
-              reason: { type: "STRING" },
-              human_rewrite: { type: "STRING" }
-            },
-            required: ["category", "matched_phrase", "sentence_context", "reason", "human_rewrite"]
-          }
-        }
-      },
-      required: ["overall_ai_style_score", "executive_diagnosis", "findings"]
-    };
-
-    const apiKeyInput = document.getElementById("apiKey");
-    const modelSelect = document.getElementById("modelSelect");
-    const articleUrlInput = document.getElementById("articleUrl");
-    const articleTextInput = document.getElementById("articleText");
-    const statusMsg = document.getElementById("statusMsg");
-    const reportSection = document.getElementById("reportSection");
-    const scoreBadge = document.getElementById("scoreBadge");
-    const findingCount = document.getElementById("findingCount");
-    const diagnosisText = document.getElementById("diagnosisText");
-    const filterBar = document.getElementById("filterBar");
-    const findingsList = document.getElementById("findingsList");
-
-    let currentReport = null;
-    let activeCategory = "All";
-
-    // Restore saved API key from localStorage
-    const savedKey = localStorage.getItem("gemini_audit_api_key");
-    if (savedKey) apiKeyInput.value = savedKey;
-
-    apiKeyInput.addEventListener("input", () => {
-      localStorage.setItem("gemini_audit_api_key", apiKeyInput.value.trim());
-    });
-
-    function setStatus(msg, isError = false) {
-      statusMsg.textContent = msg;
-      statusMsg.className = isError ? "status error" : "status";
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    document.getElementById("sampleBtn").addEventListener("click", () => {
-      articleTextInput.value = SAMPLE_ARTICLE;
-      setStatus("Sample text loaded.");
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      articleTextInput.value = "";
-      articleUrlInput.value = "";
-      reportSection.classList.add("hidden");
-      setStatus("");
-    });
-
-    // Fetch URL using CORS-friendly reader extraction
-    document.getElementById("fetchBtn").addEventListener("click", async () => {
-      const rawUrl = articleUrlInput.value.trim();
-      if (!rawUrl) {
-        setStatus("Enter a valid article URL first.", true);
-        return;
-      }
-
-      const fetchBtn = document.getElementById("fetchBtn");
-      fetchBtn.disabled = true;
-      setStatus("Fetching article text...");
-
-      try {
-        // Jina Reader extracts clean article text with CORS headers enabled
-        const readerUrl = `https://r.jina.ai/${encodeURI(rawUrl)}`;
-        const res = await fetch(readerUrl, {
-          headers: { "Accept": "text/plain" }
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status} while fetching article.`);
-        }
-
-        const extracted = await res.text();
-        if (!extracted || extracted.trim().length < 40) {
-          throw new Error("Extracted content was empty or blocked by the target site.");
-        }
-
-        articleTextInput.value = extracted.trim();
-        setStatus("Article extracted. Review the text below and click Analyze Article.");
-      } catch (err) {
-        setStatus(`Could not fetch URL automatically (${err.message}). Paste the article text directly instead.`, true);
-      } finally {
-        fetchBtn.disabled = false;
-      }
-    });
-
-    document.getElementById("analyzeBtn").addEventListener("click", async () => {
-      const apiKey = apiKeyInput.value.trim();
-      const text = articleTextInput.value.trim();
-      const model = modelSelect.value;
-
-      if (!apiKey) {
-        setStatus("Please enter your Gemini API key above.", true);
-        return;
-      }
-      if (!text) {
-        setStatus("Please paste article text or fetch a URL first.", true);
-        return;
-      }
-
-      const analyzeBtn = document.getElementById("analyzeBtn");
-      analyzeBtn.disabled = true;
-      setStatus(`Analyzing article with ${model}...`);
-
-      try {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: SYSTEM_INSTRUCTION }]
-            },
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `Analyze the following article for AI-favored words, transitions, and disembodied phrasing:\n\n${text}`
-                  }
-                ]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.1,
-              responseMimeType: "application/json",
-              responseSchema: RESPONSE_SCHEMA
-            }
-          })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          const errMsg = data?.error?.message || `API Error (${response.status})`;
-          throw new Error(errMsg);
-        }
-
-        const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!rawJson) {
-          throw new Error("Empty response returned by Gemini.");
-        }
-
-        currentReport = JSON.parse(rawJson);
-        activeCategory = "All";
-        renderReport();
-        setStatus("Audit complete.");
-      } catch (err) {
-        setStatus(`Analysis failed: ${err.message}`, true);
-      } finally {
-        analyzeBtn.disabled = false;
-      }
-    });
-
-    function renderReport() {
-      if (!currentReport) return;
-
-      reportSection.classList.remove("hidden");
-      const score = currentReport.overall_ai_style_score;
-      scoreBadge.textContent = `AI Style Score: ${score}/100`;
-      scoreBadge.style.color = score >= 65 ? "var(--danger)" : score >= 35 ? "var(--warn)" : "var(--success)";
-
-      diagnosisText.textContent = currentReport.executive_diagnosis;
-      findingCount.textContent = `${currentReport.findings.length} flagged pattern(s) detected`;
-
-      // Build category filter pills
-      const categories = ["All", ...new Set(currentReport.findings.map(f => f.category))];
-      filterBar.innerHTML = "";
-      categories.forEach(cat => {
-        const count = cat === "All"
-          ? currentReport.findings.length
-          : currentReport.findings.filter(f => f.category === cat).length;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `filter-pill ${activeCategory === cat ? "active" : ""}`;
-        btn.textContent = `${cat} (${count})`;
-        btn.addEventListener("click", () => {
-          activeCategory = cat;
-          renderReport();
-        });
-        filterBar.appendChild(btn);
-      });
-
-      // Render filtered items
-      const visible = activeCategory === "All"
-        ? currentReport.findings
-        : currentReport.findings.filter(f => f.category === activeCategory);
-
-      findingsList.innerHTML = visible.map((item, idx) => `
-        <div class="finding">
-          <div class="finding-top">
-            <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
-            <span class="cat-tag">${escapeHtml(item.category)}</span>
-          </div>
-          <div class="detail-line"><span class="detail-label">Context:</span> ${escapeHtml(item.sentence_context)}</div>
-          <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
-          <div class="detail-line rewrite-text"><span class="detail-label">Rewrite:</span> ${escapeHtml(item.human_rewrite)}</div>
-        </div>
-      `).join("");
-    }
-
-    document.getElementById("downloadJsonBtn").addEventListener("click", () => {
-      if (!currentReport) return;
-      const blob = new Blob([JSON.stringify(currentReport, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "ai_audit_report.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-  </script>
 </body>
 </html>
