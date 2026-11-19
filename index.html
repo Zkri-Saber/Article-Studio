@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Manuscript &amp; Style Forensics</title>
+  <title>Article Studio — Offline AI Style Forensics</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23e9d5ff'/%3E%3Cstop offset='100%25' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='36' height='36' rx='10' fill='url(%23g)'/%3E%3Cg transform='translate(6,6)' fill='none' stroke='%231e1b4b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6'/%3E%3Cline x1='8' y1='8' x2='13' y2='8'/%3E%3Cline x1='8' y1='12' x2='11' y2='12'/%3E%3Ccircle cx='16.5' cy='16.5' r='3.5'/%3E%3Cline x1='19.1' y1='19.1' x2='21.5' y2='21.5'/%3E%3Cpath d='M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z' fill='%231e1b4b' stroke='none'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Client-side DOCX and PDF parsers -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <style>
@@ -64,13 +66,9 @@
       height: 36px;
       border-radius: 10px;
       background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
-      color: #1e1b4b;
-      font-weight: 800;
-      font-size: 13px;
       display: flex;
       align-items: center;
       justify-content: center;
-      letter-spacing: -0.05em;
       box-shadow: 0 2px 8px rgba(192, 132, 252, 0.35);
       user-select: none;
     }
@@ -133,23 +131,25 @@
       gap: 10px;
     }
 
-    .btn-dark-pill {
+    .offline-badge {
       background: var(--dark-pill);
       color: #ffffff;
-      border: 1px solid var(--dark-pill);
       border-radius: 10px;
-      padding: 8px 15px;
-      font-size: 13px;
+      padding: 8px 14px;
+      font-size: 12.5px;
       font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      transition: opacity 0.15s ease;
+      user-select: none;
     }
 
-    .btn-dark-pill:hover { opacity: 0.88; }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+    }
 
     .btn-light-pill {
       background: var(--bg-surface);
@@ -169,15 +169,6 @@
       background: var(--bg-subtle);
       border-color: var(--border-strong);
     }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #f59e0b;
-    }
-
-    .status-dot.ready { background: #10b981; }
 
     /* Centered Hero Section */
     .main-content {
@@ -261,7 +252,7 @@
       font-size: 15px;
       line-height: 1.6;
       color: var(--text-primary);
-      min-height: 108px;
+      min-height: 112px;
       max-height: 360px;
     }
 
@@ -301,8 +292,8 @@
       color: var(--text-primary);
     }
 
-    /* Lavender Model Pill */
-    .magic-select-wrap {
+    /* Lavender Mode Pill */
+    .magic-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -310,25 +301,16 @@
       border: 1px solid var(--lavender-border);
       color: var(--lavender-text);
       border-radius: 999px;
-      padding: 5px 12px;
+      padding: 5px 13px;
       height: 34px;
+      font-size: 13px;
+      font-weight: 500;
+      user-select: none;
     }
 
     .sparkle-icon {
       color: #7c3aed;
       flex-shrink: 0;
-    }
-
-    .magic-select-wrap select {
-      border: none;
-      background: transparent;
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      outline: none;
-      cursor: pointer;
-      padding-right: 4px;
     }
 
     /* Circular Submit Arrow Button */
@@ -348,14 +330,9 @@
 
     .submit-circle.active { background: var(--dark-pill); }
 
-    .submit-circle:hover:not(:disabled) {
+    .submit-circle:hover {
       background: var(--dark-pill);
       transform: translateY(-1px);
-    }
-
-    .submit-circle:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
     }
 
     /* Quick-Action Pill Chips Row */
@@ -391,27 +368,6 @@
     }
 
     .action-chip svg { color: var(--text-secondary); }
-
-    /* Progress & Status */
-    .progress-wrap {
-      width: 100%;
-      margin-top: 16px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #7c3aed;
-      transition: width 0.25s ease;
-    }
 
     .status {
       margin-top: 12px;
@@ -476,17 +432,25 @@
       border: 1px solid var(--border);
     }
 
-    .summaries-box {
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 13.5px;
-      color: var(--text-secondary);
+    .breakdown-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 16px;
     }
 
-    .summaries-box p { margin: 4px 0; }
+    .breakdown-pill {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 11px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+
+    .breakdown-pill strong {
+      color: var(--text-primary);
+    }
 
     .filters {
       display: flex;
@@ -558,7 +522,7 @@
       color: var(--text-secondary);
       font-weight: 600;
       display: inline-block;
-      min-width: 72px;
+      min-width: 78px;
     }
 
     .rewrite-text {
@@ -581,7 +545,7 @@
 
     .modal-card {
       width: 100%;
-      max-width: 440px;
+      max-width: 580px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -589,13 +553,11 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
     }
 
-    .modal-wide { max-width: 600px; }
-
     .modal-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .modal-head h3 {
@@ -604,34 +566,8 @@
       font-weight: 600;
     }
 
-    .modal-desc {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin: 0 0 14px;
-      line-height: 1.5;
-    }
-
-    .modal-input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 14px;
-      font-family: inherit;
-      margin-bottom: 14px;
-      outline: none;
-    }
-
-    .modal-input:focus { border-color: #8b5cf6; }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
     .modal-body {
-      max-height: 60vh;
+      max-height: 62vh;
       overflow-y: auto;
       font-size: 13.5px;
       color: var(--text-secondary);
@@ -660,20 +596,18 @@
 </head>
 <body>
   <div class="app-shell">
+    <!-- Slim Left Navigation Rail -->
     <aside class="sidebar" aria-label="Primary navigation">
-      <div class="brand-badge" title="Article Studio — AI Manuscript Audit">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <!-- Manuscript page -->
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
-    <line x1="8" y1="8" x2="13" y2="8" />
-    <line x1="8" y1="12" x2="11" y2="12" />
-    <!-- Audit magnifying glass -->
-    <circle cx="16.5" cy="16.5" r="3.5" />
-    <line x1="19.1" y1="19.1" x2="21.5" y2="21.5" />
-    <!-- Idea / AI sparkle -->
-    <path d="M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z" fill="#1e1b4b" stroke="none" />
-  </svg>
-</div>
+      <div class="brand-badge" title="Article Studio — Offline AI Manuscript Audit">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
+          <line x1="8" y1="8" x2="13" y2="8" />
+          <line x1="8" y1="12" x2="11" y2="12" />
+          <circle cx="16.5" cy="16.5" r="3.5" />
+          <line x1="19.1" y1="19.1" x2="21.5" y2="21.5" />
+          <path d="M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z" fill="#1e1b4b" stroke="none" />
+        </svg>
+      </div>
 
       <nav class="rail-nav">
         <button type="button" class="rail-item" id="navNewBtn" title="Start new audit">
@@ -700,7 +634,7 @@
           <span>Rubric</span>
         </button>
 
-        <button type="button" class="rail-item" id="navExportBtn" title="Download report">
+        <button type="button" class="rail-item" id="navExportBtn" title="Download Markdown report">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7" rx="1.5" />
             <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -712,16 +646,17 @@
       </nav>
     </aside>
 
+    <!-- Main Workspace -->
     <div class="workspace">
       <header class="topbar">
         <div class="topbar-left">
           <span class="workspace-tag">Article Studio</span>
         </div>
         <div class="topbar-right">
-          <button type="button" class="btn-dark-pill" id="openKeyModalBtn">
-            <span id="keyStatusDot" class="status-dot"></span>
-            <span id="keyStatusLabel">Set API Key</span>
-          </button>
+          <span class="offline-badge" title="Runs 100% locally in your browser without any API key">
+            <span class="status-dot"></span>
+            <span>Offline Engine • No API</span>
+          </span>
           <button type="button" class="btn-light-pill" id="topSampleBtn">Load Sample Draft</button>
         </div>
       </header>
@@ -745,7 +680,7 @@
             <textarea
               id="manuscriptText"
               class="prompt-textarea"
-              placeholder="Paste your manuscript draft or attach a .docx, .pdf, .md, .txt file..."
+              placeholder="Paste your manuscript draft or attach a .docx, .pdf, .md, .txt, .html file..."
               rows="5"
             ></textarea>
 
@@ -769,17 +704,14 @@
               </div>
 
               <div class="toolbar-right">
-                <div class="magic-select-wrap" title="Choose Gemini model">
-                  <svg class="sparkle-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="magic-pill" title="Instant local lexical & syntax forensics">
+                  <svg class="sparkle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z" />
                   </svg>
-                  <select id="modelSelect" aria-label="Gemini Model">
-                    <option value="gemini-3.8-flash" selected>3.8 Flash</option>
-                    <option value="gemini-3.1-pro-preview">3.1 Pro</option>
-                  </select>
+                  <span>Local Forensics</span>
                 </div>
 
-                <button type="button" class="submit-circle" id="analyzeBtn" title="Run AI Style Audit">
+                <button type="button" class="submit-circle" id="analyzeBtn" title="Run Instant AI Style Audit">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="19" x2="12" y2="5" />
                     <polyline points="5 12 12 5 19 12" />
@@ -836,16 +768,14 @@
             </button>
           </div>
 
-          <div id="progressWrap" class="progress-wrap hidden">
-            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-          </div>
           <div id="statusMsg" class="status"></div>
         </section>
 
+        <!-- Audit Report Card -->
         <section id="reportSection" class="report-card hidden">
           <div class="report-header">
             <div>
-              <h2>Forensic Audit Report</h2>
+              <h2>Offline Forensic Audit Report</h2>
               <p id="reportStats" class="muted-text"></p>
             </div>
             <div class="export-group">
@@ -855,7 +785,7 @@
             </div>
           </div>
 
-          <div id="sectionSummaries" class="summaries-box"></div>
+          <div id="breakdownBox" class="breakdown-grid"></div>
           <div id="filterBar" class="filters"></div>
           <div id="findingsList"></div>
         </section>
@@ -863,25 +793,9 @@
     </div>
   </div>
 
-  <div id="apiKeyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="modalTitle">Configure Gemini API Key</h3>
-        <button type="button" class="chip-close" id="closeKeyModalBtn">&times;</button>
-      </div>
-      <p class="modal-desc">
-        Your key is saved strictly in your browser's <code>localStorage</code> and sent directly to Google's Gemini API.
-      </p>
-      <input type="password" id="apiKey" class="modal-input" placeholder="Paste your Gemini API key (AQ.... or AIzaSy...)" autocomplete="off" />
-      <div class="modal-actions">
-        <button type="button" class="btn-light-pill" id="clearKeyBtn">Remove Key</button>
-        <button type="button" class="btn-dark-pill" id="saveKeyBtn">Save Key</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- History & Rubric Modal -->
   <div id="infoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-card modal-wide">
+    <div class="modal-card">
       <div class="modal-head">
         <h3 id="infoModalTitle">Audit History</h3>
         <button type="button" class="chip-close" id="closeInfoModalBtn">&times;</button>
@@ -891,89 +805,192 @@
   </div>
 
   <script>
-    const SYSTEM_INSTRUCTION = `
-You are an editorial forensics analyst specializing in identifying writing patterns commonly favored by Large Language Models and flagged by AI detectors.
+    // -----------------------------------------------------------------------
+    // 1. OVERUSED AI BUZZWORDS & INFLATED LEXICON
+    // -----------------------------------------------------------------------
+    const INFLATED_VERBS = [
+      ["\\bdelv(?:e|es|ed|ing)\\b", "examine, investigate, or explore"],
+      ["\\bunderscor(?:e|es|ed|ing)\\b", "emphasize, show, or highlight"],
+      ["\\bleverag(?:e|es|ed|ing)\\b", "use or apply"],
+      ["\\bfoster(?:s|ed|ing)?\\b", "encourage, build, or support"],
+      ["\\bspearhead(?:s|ed|ing)?\\b", "lead or direct"],
+      ["\\bstreamlin(?:e|es|ed|ing)\\b", "simplify or speed up"],
+      ["\\bbolster(?:s|ed|ing)?\\b", "strengthen or support"],
+      ["\\belevat(?:e|es|ed|ing)\\b", "improve, raise, or advance"],
+      ["\\bharness(?:es|ed|ing)?\\b", "use or capture"],
+      ["\\bnavigat(?:e|es|ed|ing)\\b", "manage, handle, or work through"],
+      ["\\bunlock(?:s|ed|ing)?\\b", "enable, reveal, or open up"],
+      ["\\brevolutioniz(?:e|es|ed|ing)\\b", "change or reshape"],
+      ["\\bcatalyz(?:e|es|ed|ing)\\b", "trigger, spark, or speed up"],
+      ["\\boptimiz(?:e|es|ed|ing)\\b", "improve or refine"],
+      ["\\bfacilitat(?:e|es|ed|ing)\\b", "help, enable, or allow"],
+      ["\\bempower(?:s|ed|ing)?\\b", "enable or allow"],
+      ["\\baugmen(?:t|ts|ted|ting)\\b", "add to or expand"],
+      ["\\bameliorat(?:e|es|ed|ing)\\b", "improve or reduce"],
+      ["\\belucidat(?:e|es|ed|ing)\\b", "explain or clarify"],
+      ["\\bexemplif(?:y|ies|ied|ying)\\b", "show or illustrate"],
+      ["\\btranscend(?:s|ed|ing)?\\b", "go beyond or exceed"],
+      ["\\bsynergiz(?:e|es|ed|ing)\\b", "combine or work together"]
+    ];
 
-Analyze the provided manuscript text and extract EVERY instance of the following categories:
+    const INFLATED_ADJECTIVES = [
+      ["\\bpivotal\\b", "key, central, or decisive"],
+      ["\\btransformative\\b", "major or far-reaching"],
+      ["\\bseamless\\b", "smooth or uninterrupted"],
+      ["\\brobust\\b", "strong, reliable, or thorough"],
+      ["\\bintricate\\b", "complex or detailed"],
+      ["\\bmultifaceted\\b", "varied or complex"],
+      ["\\bcomprehensive\\b", "complete, full, or thorough"],
+      ["\\bgroundbreaking\\b", "new, original, or novel"],
+      ["\\bholistic\\b", "complete or whole-system"],
+      ["\\bparamount\\b", "top, primary, or essential"],
+      ["\\bnuanced\\b", "subtle or detailed"],
+      ["\\bcutting[- ]edge\\b", "modern, recent, or advanced"],
+      ["\\bstate[- ]of[- ]the[- ]art\\b", "current or top-performing"],
+      ["\\bdynamic\\b", "changing, active, or flexible"],
+      ["\\bunprecedented\\b", "unmatched or first-of-its-kind"],
+      ["\\bindispensable\\b", "essential or necessary"],
+      ["\\bcommensurate\\b", "matching or proportional"],
+      ["\\bmeticulous\\b", "careful or thorough"],
+      ["\\bubiquitous\\b", "widespread or common"],
+      ["\\bimperative\\b", "necessary or urgent"]
+    ];
 
-1. Overused AI Buzzwords & Inflated Words:
-   - Inflated Verb: e.g., delve, underscore, leverage, foster, spearhead, streamline, bolster, elevate, harness, navigate, unlock, revolutionize, catalyze, optimize.
-   - Inflated Adjective: e.g., pivotal, transformative, seamless, robust, intricate, multifaceted, comprehensive, groundbreaking, holistic, paramount, nuanced, cutting-edge, dynamic.
-   - Inflated Noun: e.g., tapestry, testament, landscape, paradigm, synergy, realm, cornerstone, catalyst, mosaic, beacon, interplay, ecosystem.
-   - Inflated Adverb: e.g., meticulously, seamlessly, profoundly, inherently, undeniably, tirelessly, fundamentally, exponentially.
+    const INFLATED_NOUNS = [
+      ["\\btapestr(?:y|ies)\\b", "mix, collection, or pattern"],
+      ["\\btestament\\b", "proof, evidence, or sign"],
+      ["\\blandscapes?\\b", "field, area, or environment"],
+      ["\\bparadigms?\\b", "model, pattern, or approach"],
+      ["\\bsynerg(?:y|ies)\\b", "cooperation or combined effect"],
+      ["\\brealms?\\b", "area, field, or domain"],
+      ["\\bcornerstones?\\b", "foundation or basis"],
+      ["\\bcatalysts?\\b", "driver, trigger, or cause"],
+      ["\\bmosaics?\\b", "mix or combination"],
+      ["\\bbeacons?\\b", "guide, model, or signal"],
+      ["\\binterplay\\b", "interaction or relationship"],
+      ["\\becosystems?\\b", "network, system, or environment"],
+      ["\\btrajector(?:y|ies)\\b", "path, trend, or direction"],
+      ["\\bnexus\\b", "link, center, or connection"],
+      ["\\bplethora\\b", "wide range or large number"],
+      ["\\bmyriad\\b", "many or countless"]
+    ];
 
-2. Formulaic Transitions & Stock Phrases:
-   - Sentence-Initial Adverb: Repetitive sentence openers such as "Furthermore,", "Moreover,", "Additionally,", "Consequently,", "Notably,", "Ultimately,", "Essentially,", "Conversely,", "Interestingly,".
-   - Rigid List Signpost: Mechanical structural markers such as "Firstly,", "Secondly,", "Lastly,", "On one hand,", "On the other hand,", "In summary,", "To conclude,", "Key takeaways include:".
-   - Filler Phrase: Empty throat-clearing phrases such as "It is important to note that", "In today's fast-paced digital landscape", "When it comes to", "A testament to", "Plays a crucial role in", "At the end of the day", "It goes without saying".
+    const INFLATED_ADVERBS = [
+      ["\\bmeticulously\\b", "carefully or closely"],
+      ["\\bseamlessly\\b", "smoothly or easily"],
+      ["\\bprofoundly\\b", "deeply or strongly"],
+      ["\\binherently\\b", "naturally or by nature"],
+      ["\\bundeniably\\b", "clearly or plainly"],
+      ["\\btirelessly\\b", "steadily or persistently"],
+      ["\\bfundamentally\\b", "basically or at its core"],
+      ["\\bexponentially\\b", "rapidly or sharply"],
+      ["\\bintricately\\b", "closely or in detail"],
+      ["\\bholistically\\b", "as a whole"],
+      ["\\bsignificantly\\b", "notably or markedly (or cite exact statistics)"],
+      ["\\bsubstantially\\b", "largely or considerably"]
+    ];
 
-3. Disembodied / Automated Phrasing:
-   - Passive voice constructions or sentences where software, algorithms, frameworks, tools, or abstract concepts perform human cognitive or physical actions without human agency (e.g., "The platform empowers organizations to...", "Data-driven insights dictate...", "Solutions are leveraged to drive...", "The framework facilitates seamless collaboration...").
+    // -----------------------------------------------------------------------
+    // 2. FORMULAIC TRANSITIONS, LIST SIGNPOSTS & FILLER PHRASES
+    // -----------------------------------------------------------------------
+    const SENTENCE_INITIAL_ADVERBS = [
+      ["^\\s*Furthermore\\b[,]?", "Cut or connect directly with 'Also' or a concrete subject."],
+      ["^\\s*Moreover\\b[,]?", "Cut or state the next fact directly."],
+      ["^\\s*Additionally\\b[,]?", "Use 'Also' or merge into the preceding point."],
+      ["^\\s*Consequently\\b[,]?", "Use 'As a result' or show the direct cause-and-effect."],
+      ["^\\s*Notably\\b[,]?", "Cut and let the data or finding speak for itself."],
+      ["^\\s*Ultimately\\b[,]?", "Cut or state the final outcome plainly."],
+      ["^\\s*Essentially\\b[,]?", "Cut—say what the thing actually is."],
+      ["^\\s*Conversely\\b[,]?", "Use 'In contrast' or 'By comparison'."],
+      ["^\\s*Interestingly\\b[,]?", "Cut editorializing; present the finding directly."],
+      ["^\\s*Importantly\\b[,]?", "Cut throat-clearing; state why it matters."],
+      ["^\\s*Undoubtedly\\b[,]?", "Cut overstated certainty unless backed by proof."],
+      ["^\\s*Nonetheless\\b[,]?", "Use 'Still' or 'Even so'."],
+      ["^\\s*Nevertheless\\b[,]?", "Use 'Still' or 'However'."],
+      ["^\\s*Collectively\\b[,]?", "Use 'Together' or 'Overall'."]
+    ];
 
-Rules:
-- Quote matched_phrase and sentence_context verbatim from the input text.
-- Do not invent examples that do not appear in the manuscript.
-- Provide crisp, natural, concrete rewrites in human_rewrite that restore human subjects and plain verbs.
-`;
+    const RIGID_LIST_SIGNPOSTS = [
+      ["^\\s*Firstly\\b[,]?", "Use 'First,' or restructure without mechanical numbering."],
+      ["^\\s*Secondly\\b[,]?", "Use 'Second,' or transition via topic link."],
+      ["^\\s*Thirdly\\b[,]?", "Use 'Third,' or transition via topic link."],
+      ["^\\s*Lastly\\b[,]?", "Use 'Finally,' or conclude directly."],
+      ["^\\s*On (?:the )?one hand\\b[,]?", "State the first perspective directly without stock framing."],
+      ["^\\s*On the other hand\\b[,]?", "Use 'In contrast,' or 'However,'."],
+      ["^\\s*In summary\\b[,]?", "Cut signpost and state the synthesis directly."],
+      ["^\\s*In conclusion\\b[,]?", "Cut signpost and deliver the closing takeaway."],
+      ["^\\s*To conclude\\b[,]?", "Cut signpost and state the conclusion directly."],
+      ["^\\s*To summarize\\b[,]?", "Cut signpost and state the main point."],
+      ["\\bKey takeaways include\\s*:?", "Introduce the specific findings directly."]
+    ];
+
+    const FILLER_PHRASES = [
+      ["\\bit is important to note that\\b", "Delete filler; start the sentence with the actual subject."],
+      ["\\bit is worth noting that\\b", "Delete filler; state the observation directly."],
+      ["\\bit should be noted that\\b", "Delete filler; state the point directly."],
+      ["\\bit goes without saying(?: that)?\\b", "Delete cliché; omit or state plainly."],
+      ["\\bin today'?s (?:fast[- ]paced |rapidly evolving |modern )?(?:digital )?(?:landscape|world|era)\\b", "Delete generic opener; name the specific timeframe or context."],
+      ["\\bwhen it comes to\\b", "Replace with 'for', 'in', or 'regarding'."],
+      ["\\ba testament to\\b", "Replace with 'evidence of' or 'proof that'."],
+      ["\\bplays? a (?:crucial|pivotal|vital|key|critical) role in\\b", "Replace with an active verb (e.g., 'drives', 'shapes', 'controls')."],
+      ["\\bat the end of the day\\b", "Delete cliché; state the conclusion directly."],
+      ["\\bin the realm of\\b", "Replace with 'in'."],
+      ["\\ba wide array of\\b", "Replace with 'many' or 'several'."],
+      ["\\ba plethora of\\b", "Replace with 'many' or give an exact count."],
+      ["\\bpave(?:s|d|ing)? the way for\\b", "Replace with 'enable', 'allow', or 'lead to'."],
+      ["\\bbridge(?:s|d|ing)? the gap between\\b", "Replace with 'connect' or 'link'."],
+      ["\\bdelve(?:s|d|ing)? into\\b", "Replace with 'examine' or 'analyze'."],
+      ["\\bshed(?:s|ding)? light on\\b", "Replace with 'clarify', 'explain', or 'reveal'."]
+    ];
+
+    // -----------------------------------------------------------------------
+    // 3. DISEMBODIED / AUTOMATED PHRASING & PASSIVE AGENCY
+    // -----------------------------------------------------------------------
+    const ABSTRACT_SUBJECT_PATTERN =
+      "\\b(?:the|this|these|our|modern|advanced|current|proposed)?\\s*" +
+      "(?:platform|system|systems|algorithm|algorithms|model|models|framework|frameworks|" +
+      "software|solution|solutions|technology|technologies|tool|tools|data|datasets|" +
+      "insights|study|paper|review|approach|methodology|ecosystem|automation|ai|" +
+      "machine learning|deep learning|neural networks?)\\s+" +
+      "(?:empowers?|enables?|facilitates?|drives?|dictates?|underscores?|highlights?|" +
+      "demonstrates?|unlocks?|revolutionizes?|transforms?|bridges?|navigates?|" +
+      "harnesses?|fosters?|elevates?|spearheads?|streamlines?|optimizes?|catalyzes?|" +
+      "ensures?|delivers?|provides?)\\b";
+
+    const PASSIVE_VOICE_PATTERN =
+      "\\b(?:is|are|was|were|be|been|being)\\s+" +
+      "(?:[a-z]+ly\\s+)?" +
+      "(" +
+      "[a-z]{3,}ed|" +
+      "shown|found|seen|known|given|taken|made|built|held|led|read|said|sent|set|" +
+      "drawn|driven|chosen|written|broken|spoken|proven|undertaken|overcome" +
+      ")\\b";
+
+    const PASSIVE_FALSE_POSITIVES = new Set([
+      "interested", "tired", "pleased", "excited", "worried", "concerned",
+      "satisfied", "disappointed", "surprised", "bored", "confused", "crowded",
+      "married", "divorced", "located", "situated", "related", "associated",
+      "paired", "coupled", "limited", "restricted", "dedicated", "committed",
+      "advanced", "detailed", "sophisticated", "established", "experienced"
+    ]);
 
     const SAMPLE_ARTICLE = `In today's fast-paced digital landscape, organizations must seamlessly leverage cutting-edge analytics to unlock transformative growth. Furthermore, it is important to note that modern software ecosystems play a crucial role in fostering synergy across multifaceted teams. Firstly, the platform empowers stakeholders to delve into intricate datasets without manual intervention. Moreover, actionable insights are meticulously generated by the algorithm to bolster decision-making. Ultimately, this robust paradigm serves as a testament to how automation elevates operational efficiency across the entire enterprise.`;
 
-    const RESPONSE_SCHEMA = {
-      type: "OBJECT",
-      properties: {
-        ai_style_score: { type: "INTEGER" },
-        section_summary: { type: "STRING" },
-        findings: {
-          type: "ARRAY",
-          items: {
-            type: "OBJECT",
-            properties: {
-              category: {
-                type: "STRING",
-                enum: [
-                  "Inflated Verb",
-                  "Inflated Adjective",
-                  "Inflated Noun",
-                  "Inflated Adverb",
-                  "Sentence-Initial Adverb",
-                  "Rigid List Signpost",
-                  "Filler Phrase",
-                  "Disembodied / Passive Agency"
-                ]
-              },
-              matched_phrase: { type: "STRING" },
-              sentence_context: { type: "STRING" },
-              reason: { type: "STRING" },
-              human_rewrite: { type: "STRING" }
-            },
-            required: ["category", "matched_phrase", "sentence_context", "reason", "human_rewrite"]
-          }
-        }
-      },
-      required: ["ai_style_score", "section_summary", "findings"]
-    };
-
-    const apiKeyInput = document.getElementById("apiKey");
-    const keyStatusDot = document.getElementById("keyStatusDot");
-    const keyStatusLabel = document.getElementById("keyStatusLabel");
-    const modelSelect = document.getElementById("modelSelect");
+    // UI Elements
     const fileInput = document.getElementById("fileInput");
     const attachmentBar = document.getElementById("attachmentBar");
     const fileMeta = document.getElementById("fileMeta");
     const manuscriptText = document.getElementById("manuscriptText");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const statusMsg = document.getElementById("statusMsg");
-    const progressWrap = document.getElementById("progressWrap");
-    const progressFill = document.getElementById("progressFill");
     const reportSection = document.getElementById("reportSection");
     const reportStats = document.getElementById("reportStats");
     const scoreBadge = document.getElementById("scoreBadge");
-    const sectionSummaries = document.getElementById("sectionSummaries");
+    const breakdownBox = document.getElementById("breakdownBox");
     const filterBar = document.getElementById("filterBar");
     const findingsList = document.getElementById("findingsList");
     const heroSection = document.querySelector(".hero-section");
 
-    const apiKeyModal = document.getElementById("apiKeyModal");
     const infoModal = document.getElementById("infoModal");
     const infoModalTitle = document.getElementById("infoModalTitle");
     const infoModalBody = document.getElementById("infoModalBody");
@@ -981,75 +998,19 @@ Rules:
     let currentReport = null;
     let currentFileName = "manuscript";
     let activeCategory = "All";
-    let pendingFilterGroup = null;
 
     const CATEGORY_GROUPS = {
       buzzwords: ["Inflated Verb", "Inflated Adjective", "Inflated Noun", "Inflated Adverb"],
       transitions: ["Sentence-Initial Adverb", "Rigid List Signpost", "Filler Phrase"],
-      passive: ["Disembodied / Passive Agency"]
+      passive: ["Disembodied / Automated Phrasing", "Passive Construction"]
     };
-
-    function syncKeyIndicator() {
-      const key = localStorage.getItem("gemini_manuscript_api_key") || "";
-      apiKeyInput.value = key;
-      if (key.trim()) {
-        keyStatusDot.classList.add("ready");
-        keyStatusLabel.textContent = "API Key Ready";
-      } else {
-        keyStatusDot.classList.remove("ready");
-        keyStatusLabel.textContent = "Set API Key";
-      }
-    }
 
     function syncSubmitState() {
       analyzeBtn.classList.toggle("active", manuscriptText.value.trim().length > 0);
     }
 
-    syncKeyIndicator();
     syncSubmitState();
-
     manuscriptText.addEventListener("input", syncSubmitState);
-
-    document.getElementById("openKeyModalBtn").addEventListener("click", () => {
-      apiKeyModal.classList.remove("hidden");
-      apiKeyInput.focus();
-    });
-
-    document.getElementById("closeKeyModalBtn").addEventListener("click", () => {
-      apiKeyModal.classList.add("hidden");
-    });
-
-    document.getElementById("saveKeyBtn").addEventListener("click", () => {
-      localStorage.setItem("gemini_manuscript_api_key", apiKeyInput.value.trim());
-      syncKeyIndicator();
-      apiKeyModal.classList.add("hidden");
-      setStatus("API key saved in browser localStorage.");
-    });
-
-    document.getElementById("clearKeyBtn").addEventListener("click", () => {
-      localStorage.removeItem("gemini_manuscript_api_key");
-      apiKeyInput.value = "";
-      syncKeyIndicator();
-      apiKeyModal.classList.add("hidden");
-      setStatus("API key removed from browser.");
-    });
-
-    document.getElementById("closeInfoModalBtn").addEventListener("click", () => {
-      infoModal.classList.add("hidden");
-    });
-
-    [apiKeyModal, infoModal].forEach(modal => {
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.add("hidden");
-      });
-    });
-
-    function getActiveModelId() {
-      const selected = modelSelect.value.replace(/^models\//, "").trim();
-      if (selected === "gemini-2.5-flash") return "gemini-3.8-flash";
-      if (selected === "gemini-2.5-pro") return "gemini-3.1-pro-preview";
-      return selected;
-    }
 
     function setStatus(msg, isError = false) {
       statusMsg.textContent = msg;
@@ -1065,6 +1026,7 @@ Rules:
         .replace(/'/g, "&#039;");
     }
 
+    // File Attachment & Parsing (.docx, .pdf, .md, .txt, .html)
     document.getElementById("attachBtn").addEventListener("click", () => fileInput.click());
 
     document.getElementById("removeFileBtn").addEventListener("click", () => {
@@ -1118,7 +1080,7 @@ Rules:
         fileMeta.textContent = `${file.name} (${words.toLocaleString()} words)`;
         attachmentBar.classList.remove("hidden");
         syncSubmitState();
-        setStatus("Manuscript attached. Click the arrow button to run the audit.");
+        setStatus("Manuscript loaded. Click the arrow button to run the offline audit.");
       } catch (err) {
         setStatus(`Could not read file: ${err.message}`, true);
       }
@@ -1138,10 +1100,8 @@ Rules:
       fileInput.value = "";
       currentFileName = "manuscript";
       currentReport = null;
-      pendingFilterGroup = null;
       attachmentBar.classList.add("hidden");
       reportSection.classList.add("hidden");
-      progressWrap.classList.add("hidden");
       heroSection.classList.remove("compact");
       syncSubmitState();
       setStatus("");
@@ -1151,11 +1111,20 @@ Rules:
     document.getElementById("clearBtn").addEventListener("click", resetWorkspace);
     document.getElementById("navNewBtn").addEventListener("click", resetWorkspace);
 
+    // Modals (History & Rubric)
+    document.getElementById("closeInfoModalBtn").addEventListener("click", () => {
+      infoModal.classList.add("hidden");
+    });
+
+    infoModal.addEventListener("click", (e) => {
+      if (e.target === infoModal) infoModal.classList.add("hidden");
+    });
+
     document.getElementById("navHistoryBtn").addEventListener("click", () => {
-      const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
       infoModalTitle.textContent = "Recent Local Audits";
       if (history.length === 0) {
-        infoModalBody.innerHTML = "<p>No saved audits in this browser yet. Run an audit to save it here automatically.</p>";
+        infoModalBody.innerHTML = "<p>No saved audits in this browser yet. Run an audit to save it automatically.</p>";
       } else {
         infoModalBody.innerHTML = history.map((entry, idx) => `
           <div class="history-item">
@@ -1171,7 +1140,7 @@ Rules:
     });
 
     window.loadHistoryReport = (idx) => {
-      const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
       if (!history[idx]) return;
       currentReport = history[idx];
       currentFileName = currentReport.manuscript;
@@ -1181,14 +1150,14 @@ Rules:
     };
 
     document.getElementById("navRubricBtn").addEventListener("click", () => {
-      infoModalTitle.textContent = "AI Style Detection Rubric";
+      infoModalTitle.textContent = "Offline AI Style Detection Rubric";
       infoModalBody.innerHTML = `
         <p><strong>1. Overused AI Buzzwords &amp; Inflated Words</strong><br>
         Flags inflated verbs (<em>delve, underscore, leverage, foster</em>), adjectives (<em>pivotal, transformative, seamless, robust</em>), nouns (<em>tapestry, testament, landscape, paradigm</em>), and adverbs (<em>meticulously, seamlessly, profoundly</em>).</p>
         <p><strong>2. Formulaic Transitions &amp; Stock Phrases</strong><br>
         Flags repetitive sentence-initial adverbs (<em>Furthermore, Moreover, Additionally</em>), rigid list signposts (<em>Firstly, Secondly, In summary</em>), and filler phrases (<em>It is important to note that, In today's fast-paced digital landscape</em>).</p>
-        <p><strong>3. Disembodied / Automated Phrasing</strong><br>
-        Flags passive constructions or sentences where software, algorithms, or abstract frameworks perform human actions without human agency.</p>
+        <p><strong>3. Disembodied / Automated Phrasing &amp; Passive Agency</strong><br>
+        Flags passive verb constructions and sentences where software, algorithms, or abstract concepts perform human-agency verbs without a human subject.</p>
       `;
       infoModal.classList.remove("hidden");
     });
@@ -1201,6 +1170,7 @@ Rules:
       document.getElementById("downloadMdBtn").click();
     });
 
+    // Quick-Action Chips
     document.querySelectorAll(".action-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         const action = chip.dataset.action;
@@ -1209,8 +1179,7 @@ Rules:
           return;
         }
         if (action === "audit") {
-          pendingFilterGroup = null;
-          runAudit();
+          runOfflineAudit("All");
           return;
         }
         if (currentReport) {
@@ -1218,141 +1187,198 @@ Rules:
           renderReport();
           reportSection.scrollIntoView({ behavior: "smooth" });
         } else {
-          pendingFilterGroup = `GROUP:${action}`;
-          runAudit();
+          runOfflineAudit(`GROUP:${action}`);
         }
       });
     });
 
-    function chunkManuscript(text, maxWords = 2000) {
-      const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
-      const chunks = [];
-      let current = [];
-      let currentWords = 0;
+    analyzeBtn.addEventListener("click", () => runOfflineAudit("All"));
 
-      for (const para of paragraphs) {
-        const words = para.split(/\s+/).length;
-        if (current.length > 0 && currentWords + words > maxWords) {
-          chunks.push(current.join("\n\n"));
-          current = [para];
-          currentWords = words;
-        } else {
-          current.push(para);
-          currentWords += words;
-        }
+    // Sentence Splitter with Abbreviation & Decimal Protection
+    function splitSentences(paragraph) {
+      let protectedText = paragraph;
+      const abbreviations = [
+        /\bDr\./gi, /\bMr\./gi, /\bMs\./gi, /\bMrs\./gi, /\bProf\./gi,
+        /\bFig\./gi, /\bEq\./gi, /\bRef\./gi, /\bSec\./gi, /\bVol\./gi, /\bNo\./gi,
+        /\bvs\./gi, /\bet al\./gi, /\be\.g\./gi, /\bi\.e\./gi, /\bcf\./gi
+      ];
+      for (const abbr of abbreviations) {
+        protectedText = protectedText.replace(abbr, match => match.replace(/\./g, "<DOT>"));
       }
-      if (current.length > 0) chunks.push(current.join("\n\n"));
-      return chunks;
+      protectedText = protectedText.replace(/(\d)\.(\d)/g, "$1<DOT>$2");
+
+      const matches = protectedText.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [];
+      return matches
+        .map(s => s.replace(/<DOT>/g, ".").trim())
+        .filter(Boolean);
     }
 
-    analyzeBtn.addEventListener("click", () => {
-      pendingFilterGroup = null;
-      runAudit();
-    });
-
-    async function runAudit() {
-      const apiKey = (localStorage.getItem("gemini_manuscript_api_key") || apiKeyInput.value).trim();
+    // Core Offline Audit Engine
+    function runOfflineAudit(initialFilter = "All") {
       const text = manuscriptText.value.trim();
-      const model = getActiveModelId();
-
-      if (!apiKey) {
-        apiKeyModal.classList.remove("hidden");
-        apiKeyInput.focus();
-        setStatus("Please enter your Gemini API key first.", true);
-        return;
-      }
       if (!text) {
         setStatus("Paste manuscript text or attach a file first.", true);
         return;
       }
 
-      analyzeBtn.disabled = true;
-      progressWrap.classList.remove("hidden");
-      progressFill.style.width = "0%";
+      const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      const findings = [];
+      const wordMatches = text.match(/\b\w+(?:[-']\w+)*\b/g);
+      const totalWords = wordMatches ? wordMatches.length : 0;
+      let totalSentences = 0;
+      let sentenceInitialHits = 0;
 
-      const chunks = chunkManuscript(text);
-      const allFindings = [];
-      const summaries = [];
-      let weightedScoreSum = 0;
-      let totalWords = 0;
+      const lexiconGroups = [
+        ["Inflated Verb", INFLATED_VERBS, "Overused AI action buzzword that inflates routine actions."],
+        ["Inflated Adjective", INFLATED_ADJECTIVES, "Vague promotional qualifier favored by LLMs."],
+        ["Inflated Noun", INFLATED_NOUNS, "Abstract metaphor or buzzword noun overrepresented in AI prose."],
+        ["Inflated Adverb", INFLATED_ADVERBS, "Intensifying adverb that pads claims without adding data."]
+      ];
 
-      try {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+      paragraphs.forEach((para, pIdx) => {
+        const secNum = pIdx + 1;
+        const sentences = splitSentences(para);
 
-        for (let i = 0; i < chunks.length; i++) {
-          const sectionNum = i + 1;
-          const chunkWords = Math.max(1, chunks[i].split(/\s+/).length);
-          setStatus(`Auditing section ${sectionNum} of ${chunks.length} (${chunkWords.toLocaleString()} words) using ${model}...`);
+        sentences.forEach((sent) => {
+          totalSentences += 1;
 
-          const response = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-goog-api-key": apiKey
-            },
-            body: JSON.stringify({
-              systemInstruction: {
-                parts: [{ text: SYSTEM_INSTRUCTION }]
-              },
-              contents: [
-                {
-                  parts: [
-                    {
-                      text: `Analyze section ${sectionNum} of ${chunks.length} from this manuscript for AI-favored words, transitions, filler phrases, and disembodied phrasing:\n\n${chunks[i]}`
-                    }
-                  ]
-                }
-              ],
-              generationConfig: {
-                temperature: 0.1,
-                responseMimeType: "application/json",
-                responseSchema: RESPONSE_SCHEMA
+          // 1. Inflated Lexicon
+          for (const [category, list, reason] of lexiconGroups) {
+            for (const [pattern, suggestion] of list) {
+              const rx = new RegExp(pattern, "gi");
+              for (const match of sent.matchAll(rx)) {
+                findings.push({
+                  section: secNum,
+                  sentence_num: totalSentences,
+                  category,
+                  matched_phrase: match[0],
+                  sentence_context: sent,
+                  reason,
+                  suggestion: `Replace with: ${suggestion}.`
+                });
               }
-            })
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-            const msg = data?.error?.message || `HTTP ${response.status}`;
-            throw new Error(msg);
+            }
           }
 
-          const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!rawJson) throw new Error(`Empty response on section ${sectionNum}.`);
-
-          const parsed = JSON.parse(rawJson);
-          weightedScoreSum += parsed.ai_style_score * chunkWords;
-          totalWords += chunkWords;
-          summaries.push(`Section ${sectionNum}: ${parsed.section_summary}`);
-
-          for (const item of parsed.findings) {
-            allFindings.push({ section: sectionNum, ...item });
+          // 2A. Sentence-Initial Adverbs
+          for (const [pattern, suggestion] of SENTENCE_INITIAL_ADVERBS) {
+            const match = sent.match(new RegExp(pattern, "i"));
+            if (match) {
+              sentenceInitialHits += 1;
+              findings.push({
+                section: secNum,
+                sentence_num: totalSentences,
+                category: "Sentence-Initial Adverb",
+                matched_phrase: match[0],
+                sentence_context: sent,
+                reason: "Formulaic sentence-opening adverb commonly chained by AI models.",
+                suggestion
+              });
+            }
           }
 
-          progressFill.style.width = `${Math.round((sectionNum / chunks.length) * 100)}%`;
-        }
+          // 2B. Rigid List Signposts
+          for (const [pattern, suggestion] of RIGID_LIST_SIGNPOSTS) {
+            const match = sent.match(new RegExp(pattern, "i"));
+            if (match) {
+              findings.push({
+                section: secNum,
+                sentence_num: totalSentences,
+                category: "Rigid List Signpost",
+                matched_phrase: match[0],
+                sentence_context: sent,
+                reason: "Mechanical structural signpost typical of templated LLM outlines.",
+                suggestion
+              });
+            }
+          }
 
-        currentReport = {
-          manuscript: currentFileName,
-          overall_ai_style_score: Math.round(weightedScoreSum / Math.max(1, totalWords)),
-          total_words: totalWords,
-          total_findings: allFindings.length,
-          section_summaries: summaries,
-          findings: allFindings
-        };
+          // 2C. Filler Phrases
+          for (const [pattern, suggestion] of FILLER_PHRASES) {
+            const rx = new RegExp(pattern, "gi");
+            for (const match of sent.matchAll(rx)) {
+              findings.push({
+                section: secNum,
+                sentence_num: totalSentences,
+                category: "Filler Phrase",
+                matched_phrase: match[0],
+                sentence_context: sent,
+                reason: "Empty stock throat-clearing phrase that adds word count without meaning.",
+                suggestion
+              });
+            }
+          }
 
-        const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
-        history.unshift(currentReport);
-        localStorage.setItem("gemini_audit_history", JSON.stringify(history.slice(0, 10)));
+          // 3A. Disembodied / Automated Phrasing
+          for (const match of sent.matchAll(new RegExp(ABSTRACT_SUBJECT_PATTERN, "gi"))) {
+            findings.push({
+              section: secNum,
+              sentence_num: totalSentences,
+              category: "Disembodied / Automated Phrasing",
+              matched_phrase: match[0].trim(),
+              sentence_context: sent,
+              reason: "Non-human tool, model, or abstract noun performs a human-agency verb.",
+              suggestion: "Name the human actor (e.g., 'Clinicians used the model to...' or 'We analyzed...')."
+            });
+          }
 
-        activeCategory = pendingFilterGroup || "All";
-        renderReport();
-        setStatus("Audit complete.");
-      } catch (err) {
-        setStatus(`Audit failed: ${err.message}`, true);
-      } finally {
-        analyzeBtn.disabled = false;
+          // 3B. Passive Constructions
+          for (const match of sent.matchAll(new RegExp(PASSIVE_VOICE_PATTERN, "gi"))) {
+            const participle = (match[1] || "").toLowerCase();
+            if (PASSIVE_FALSE_POSITIVES.has(participle)) continue;
+            findings.push({
+              section: secNum,
+              sentence_num: totalSentences,
+              category: "Passive Construction",
+              matched_phrase: match[0],
+              sentence_context: sent,
+              reason: "Passive verb construction obscures who performed the action.",
+              suggestion: "Convert to active voice with an explicit human subject where appropriate."
+            });
+          }
+        });
+      });
+
+      const counts = {};
+      for (const f of findings) {
+        counts[f.category] = (counts[f.category] || 0) + 1;
       }
+
+      const safeWords = Math.max(1, totalWords);
+      const safeSentences = Math.max(1, totalSentences);
+
+      const weightedPoints =
+        (counts["Inflated Verb"] || 0) * 2.5 +
+        (counts["Inflated Adjective"] || 0) * 2.2 +
+        (counts["Inflated Noun"] || 0) * 2.5 +
+        (counts["Inflated Adverb"] || 0) * 2.0 +
+        (counts["Sentence-Initial Adverb"] || 0) * 3.0 +
+        (counts["Rigid List Signpost"] || 0) * 3.0 +
+        (counts["Filler Phrase"] || 0) * 3.5 +
+        (counts["Disembodied / Automated Phrasing"] || 0) * 3.0 +
+        (counts["Passive Construction"] || 0) * 1.2;
+
+      const densityScore = (weightedPoints / safeWords) * 180;
+      const transitionBonus = (sentenceInitialHits / safeSentences) * 35;
+      const overallScore = Math.min(100, Math.round(densityScore + transitionBonus));
+
+      currentReport = {
+        manuscript: currentFileName,
+        overall_ai_style_score: overallScore,
+        total_words: totalWords,
+        total_sentences: totalSentences,
+        total_findings: findings.length,
+        category_breakdown: counts,
+        findings
+      };
+
+      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
+      history.unshift(currentReport);
+      localStorage.setItem("offline_audit_history", JSON.stringify(history.slice(0, 10)));
+
+      activeCategory = initialFilter;
+      renderReport();
+      setStatus(`Offline audit complete — scanned ${totalWords.toLocaleString()} words locally.`);
     }
 
     function renderReport() {
@@ -1365,18 +1391,19 @@ Rules:
       scoreBadge.textContent = `AI Style Score: ${score}/100`;
       scoreBadge.style.color = score >= 65 ? "var(--danger)" : score >= 35 ? "var(--warn)" : "var(--success)";
 
-      reportStats.textContent = `${currentReport.total_words.toLocaleString()} words audited • ${currentReport.total_findings} flagged instance(s)`;
+      reportStats.textContent = `${currentReport.total_words.toLocaleString()} words • ${currentReport.total_sentences.toLocaleString()} sentences • ${currentReport.total_findings} flagged instance(s)`;
 
-      sectionSummaries.innerHTML = currentReport.section_summaries
-        .map(s => `<p>${escapeHtml(s)}</p>`)
-        .join("");
+      const entries = Object.entries(currentReport.category_breakdown).sort((a, b) => b[1] - a[1]);
+      breakdownBox.innerHTML = entries.length === 0
+        ? `<div class="breakdown-pill">No AI-favored buzzwords, stock transitions, or passive agency patterns detected.</div>`
+        : entries.map(([cat, count]) => `<div class="breakdown-pill">${escapeHtml(cat)}: <strong>${count}</strong></div>`).join("");
 
-      const categories = ["All", ...new Set(currentReport.findings.map(f => f.category))];
+      const categories = ["All", ...Object.keys(currentReport.category_breakdown)];
       filterBar.innerHTML = "";
       categories.forEach(cat => {
         const count = cat === "All"
           ? currentReport.findings.length
-          : currentReport.findings.filter(f => f.category === cat).length;
+          : (currentReport.category_breakdown[cat] || 0);
 
         const btn = document.createElement("button");
         btn.type = "button";
@@ -1404,11 +1431,11 @@ Rules:
           <div class="finding">
             <div class="finding-top">
               <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
-              <span class="cat-tag">Sec ${item.section} • ${escapeHtml(item.category)}</span>
+              <span class="cat-tag">Para ${item.section} • Sent ${item.sentence_num} • ${escapeHtml(item.category)}</span>
             </div>
-            <div class="detail-line"><span class="detail-label">Original:</span> ${escapeHtml(item.sentence_context)}</div>
+            <div class="detail-line"><span class="detail-label">Sentence:</span> ${escapeHtml(item.sentence_context)}</div>
             <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
-            <div class="detail-line rewrite-text"><span class="detail-label">Rewrite:</span> ${escapeHtml(item.human_rewrite)}</div>
+            <div class="detail-line rewrite-text"><span class="detail-label">Suggestion:</span> ${escapeHtml(item.suggestion)}</div>
           </div>
         `).join("");
     }
@@ -1427,7 +1454,7 @@ Rules:
       if (!currentReport) return;
       triggerDownload(
         JSON.stringify(currentReport, null, 2),
-        `${currentFileName}_ai_audit.json`,
+        `${currentFileName}_offline_ai_audit.json`,
         "application/json"
       );
     });
@@ -1435,30 +1462,34 @@ Rules:
     document.getElementById("downloadMdBtn").addEventListener("click", () => {
       if (!currentReport) return;
       const lines = [
-        `# AI Style & Phrasing Audit: \`${currentReport.manuscript}\``,
+        `# Offline AI Style & Phrasing Audit: \`${currentReport.manuscript}\``,
         "",
-        `- **Overall AI Style Score:** ${currentReport.overall_ai_style_score}/100`,
+        `- **AI Style Score:** ${currentReport.overall_ai_style_score}/100`,
         `- **Word Count:** ${currentReport.total_words.toLocaleString()}`,
+        `- **Sentence Count:** ${currentReport.total_sentences.toLocaleString()}`,
         `- **Flagged Instances:** ${currentReport.total_findings}`,
         "",
-        "## Section Summaries",
+        "## Category Breakdown",
         ""
       ];
 
-      currentReport.section_summaries.forEach(s => lines.push(`- ${s}`));
-      lines.push("", "## Flagged Phrases & Human Rewrites", "");
+      Object.entries(currentReport.category_breakdown)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([cat, count]) => lines.push(`- **${cat}:** ${count}`));
+
+      lines.push("", "## Flagged Phrases & Editorial Suggestions", "");
 
       currentReport.findings.forEach((f, idx) => {
         lines.push(
-          `### ${idx + 1}. [${f.category}] \`${f.matched_phrase}\` (Section ${f.section})`,
-          `- **Original:** ${f.sentence_context}`,
+          `### ${idx + 1}. [${f.category}] \`${f.matched_phrase}\` (Paragraph ${f.section}, Sentence ${f.sentence_num})`,
+          `- **Sentence:** ${f.sentence_context}`,
           `- **Why flagged:** ${f.reason}`,
-          `- **Suggested rewrite:** ${f.human_rewrite}`,
+          `- **Edit guidance:** ${f.suggestion}`,
           ""
         );
       });
 
-      triggerDownload(lines.join("\n"), `${currentFileName}_ai_audit.md`, "text/markdown");
+      triggerDownload(lines.join("\n"), `${currentFileName}_offline_ai_audit.md`, "text/markdown");
     });
   </script>
 </body>
