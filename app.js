@@ -61,9 +61,11 @@ const RESPONSE_SCHEMA = {
 };
 
 const apiKeyInput = document.getElementById("apiKey");
+const keyStatusDot = document.getElementById("keyStatusDot");
+const keyStatusLabel = document.getElementById("keyStatusLabel");
 const modelSelect = document.getElementById("modelSelect");
-const customModelInput = document.getElementById("customModel");
 const fileInput = document.getElementById("fileInput");
+const attachmentBar = document.getElementById("attachmentBar");
 const fileMeta = document.getElementById("fileMeta");
 const manuscriptText = document.getElementById("manuscriptText");
 const analyzeBtn = document.getElementById("analyzeBtn");
@@ -76,32 +78,86 @@ const scoreBadge = document.getElementById("scoreBadge");
 const sectionSummaries = document.getElementById("sectionSummaries");
 const filterBar = document.getElementById("filterBar");
 const findingsList = document.getElementById("findingsList");
+const heroSection = document.querySelector(".hero-section");
+
+const apiKeyModal = document.getElementById("apiKeyModal");
+const infoModal = document.getElementById("infoModal");
+const infoModalTitle = document.getElementById("infoModalTitle");
+const infoModalBody = document.getElementById("infoModalBody");
 
 let currentReport = null;
 let currentFileName = "manuscript";
 let activeCategory = "All";
+let pendingFilterGroup = null;
 
-const savedKey = localStorage.getItem("gemini_manuscript_api_key");
-if (savedKey) apiKeyInput.value = savedKey;
+const CATEGORY_GROUPS = {
+  buzzwords: ["Inflated Verb", "Inflated Adjective", "Inflated Noun", "Inflated Adverb"],
+  transitions: ["Sentence-Initial Adverb", "Rigid List Signpost", "Filler Phrase"],
+  passive: ["Disembodied / Passive Agency"]
+};
 
-apiKeyInput.addEventListener("input", () => {
-  localStorage.setItem("gemini_manuscript_api_key", apiKeyInput.value.trim());
-});
-
-if (customModelInput) {
-  modelSelect.addEventListener("change", () => {
-    customModelInput.classList.toggle("hidden", modelSelect.value !== "custom");
-  });
+function syncKeyIndicator() {
+  const key = localStorage.getItem("gemini_manuscript_api_key") || "";
+  apiKeyInput.value = key;
+  if (key.trim()) {
+    keyStatusDot.classList.add("ready");
+    keyStatusLabel.textContent = "API Key Ready";
+  } else {
+    keyStatusDot.classList.remove("ready");
+    keyStatusLabel.textContent = "Set API Key";
+  }
 }
 
-function getActiveModelId() {
-  let selected = modelSelect.value;
-  if (selected === "custom" && customModelInput) {
-    selected = customModelInput.value.trim() || "gemini-3.8-flash";
+function syncSubmitState() {
+  if (manuscriptText.value.trim().length > 0) {
+    analyzeBtn.classList.add("active");
+  } else {
+    analyzeBtn.classList.remove("active");
   }
-  selected = selected.replace(/^models\//, "").trim();
+}
 
-  // Auto-upgrade legacy 2.5 IDs if an older page version is cached
+syncKeyIndicator();
+syncSubmitState();
+
+manuscriptText.addEventListener("input", syncSubmitState);
+
+// Modal controls
+document.getElementById("openKeyModalBtn").addEventListener("click", () => {
+  apiKeyModal.classList.remove("hidden");
+  apiKeyInput.focus();
+});
+
+document.getElementById("closeKeyModalBtn").addEventListener("click", () => {
+  apiKeyModal.classList.add("hidden");
+});
+
+document.getElementById("saveKeyBtn").addEventListener("click", () => {
+  localStorage.setItem("gemini_manuscript_api_key", apiKeyInput.value.trim());
+  syncKeyIndicator();
+  apiKeyModal.classList.add("hidden");
+  setStatus("API key saved in browser localStorage.");
+});
+
+document.getElementById("clearKeyBtn").addEventListener("click", () => {
+  localStorage.removeItem("gemini_manuscript_api_key");
+  apiKeyInput.value = "";
+  syncKeyIndicator();
+  apiKeyModal.classList.add("hidden");
+  setStatus("API key removed from browser.");
+});
+
+document.getElementById("closeInfoModalBtn").addEventListener("click", () => {
+  infoModal.classList.add("hidden");
+});
+
+[apiKeyModal, infoModal].forEach(modal => {
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.classList.add("hidden");
+  });
+});
+
+function getActiveModelId() {
+  const selected = modelSelect.value.replace(/^models\//, "").trim();
   if (selected === "gemini-2.5-flash") return "gemini-3.8-flash";
   if (selected === "gemini-2.5-pro") return "gemini-3.1-pro-preview";
   return selected;
@@ -120,6 +176,15 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+// File upload & parsing
+document.getElementById("attachBtn").addEventListener("click", () => fileInput.click());
+
+document.getElementById("removeFileBtn").addEventListener("click", () => {
+  fileInput.value = "";
+  attachmentBar.classList.add("hidden");
+  currentFileName = "manuscript";
+});
 
 fileInput.addEventListener("change", async (event) => {
   const file = event.target.files?.[0];
@@ -164,26 +229,115 @@ fileInput.addEventListener("change", async (event) => {
     manuscriptText.value = extractedText.trim();
     const words = manuscriptText.value.split(/\s+/).filter(Boolean).length;
     fileMeta.textContent = `${file.name} (${words.toLocaleString()} words)`;
-    setStatus("Manuscript loaded. Click 'Audit Manuscript' to begin.");
+    attachmentBar.classList.remove("hidden");
+    syncSubmitState();
+    setStatus("Manuscript attached. Click the arrow button to run the audit.");
   } catch (err) {
     setStatus(`Could not read file: ${err.message}`, true);
   }
 });
 
-document.getElementById("sampleBtn").addEventListener("click", () => {
+function loadSampleText() {
   currentFileName = "sample_manuscript";
   manuscriptText.value = SAMPLE_ARTICLE;
-  fileMeta.textContent = "Sample text loaded";
-  setStatus("Sample text loaded.");
-});
+  fileMeta.textContent = "sample_manuscript.txt (83 words)";
+  attachmentBar.classList.remove("hidden");
+  syncSubmitState();
+  setStatus("Sample draft loaded.");
+}
 
-document.getElementById("clearBtn").addEventListener("click", () => {
+function resetWorkspace() {
   manuscriptText.value = "";
   fileInput.value = "";
-  fileMeta.textContent = "No file selected";
+  currentFileName = "manuscript";
+  currentReport = null;
+  pendingFilterGroup = null;
+  attachmentBar.classList.add("hidden");
   reportSection.classList.add("hidden");
   progressWrap.classList.add("hidden");
+  heroSection.classList.remove("compact");
+  syncSubmitState();
   setStatus("");
+}
+
+document.getElementById("topSampleBtn").addEventListener("click", loadSampleText);
+document.getElementById("clearBtn").addEventListener("click", resetWorkspace);
+document.getElementById("navNewBtn").addEventListener("click", resetWorkspace);
+
+// Left Rail: History & Rubric
+document.getElementById("navHistoryBtn").addEventListener("click", () => {
+  const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+  infoModalTitle.textContent = "Recent Local Audits";
+  if (history.length === 0) {
+    infoModalBody.innerHTML = "<p>No saved audits in this browser yet. Run an audit to save it here automatically.</p>";
+  } else {
+    infoModalBody.innerHTML = history.map((entry, idx) => `
+      <div class="history-item">
+        <div>
+          <strong style="color: var(--text-primary);">${escapeHtml(entry.manuscript)}</strong>
+          <div style="font-size: 12px;">${entry.total_words.toLocaleString()} words • ${entry.total_findings} flags • Score ${entry.overall_ai_style_score}/100</div>
+        </div>
+        <button type="button" class="btn-light-pill" onclick="loadHistoryReport(${idx})">Open</button>
+      </div>
+    `).join("");
+  }
+  infoModal.classList.remove("hidden");
+});
+
+window.loadHistoryReport = (idx) => {
+  const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+  if (!history[idx]) return;
+  currentReport = history[idx];
+  currentFileName = currentReport.manuscript;
+  activeCategory = "All";
+  infoModal.classList.add("hidden");
+  renderReport();
+};
+
+document.getElementById("navRubricBtn").addEventListener("click", () => {
+  infoModalTitle.textContent = "AI Style Detection Rubric";
+  infoModalBody.innerHTML = `
+    <p><strong>1. Overused AI Buzzwords &amp; Inflated Words</strong><br>
+    Flags inflated verbs (<em>delve, underscore, leverage, foster</em>), adjectives (<em>pivotal, transformative, seamless, robust</em>), nouns (<em>tapestry, testament, landscape, paradigm</em>), and adverbs (<em>meticulously, seamlessly, profoundly</em>).</p>
+    <p><strong>2. Formulaic Transitions &amp; Stock Phrases</strong><br>
+    Flags repetitive sentence-initial adverbs (<em>Furthermore, Moreover, Additionally</em>), rigid list signposts (<em>Firstly, Secondly, In summary</em>), and filler phrases (<em>It is important to note that, In today's fast-paced digital landscape</em>).</p>
+    <p><strong>3. Disembodied / Automated Phrasing</strong><br>
+    Flags passive constructions or sentences where software, algorithms, or abstract frameworks perform human actions without human agency.</p>
+  `;
+  infoModal.classList.remove("hidden");
+});
+
+document.getElementById("navExportBtn").addEventListener("click", () => {
+  if (!currentReport) {
+    setStatus("Run an audit first before exporting.", true);
+    return;
+  }
+  document.getElementById("downloadMdBtn").click();
+});
+
+// Quick Action Chips below prompt card
+document.querySelectorAll(".action-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const action = chip.dataset.action;
+    if (action === "sample") {
+      loadSampleText();
+      return;
+    }
+    if (action === "audit") {
+      pendingFilterGroup = null;
+      runAudit();
+      return;
+    }
+    // Category-focused chips (buzzwords, transitions, passive)
+    if (currentReport) {
+      activeCategory = `GROUP:${action}`;
+      renderReport();
+      reportSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      pendingFilterGroup = `GROUP:${action}`;
+      runAudit();
+    }
+  });
 });
 
 function chunkManuscript(text, maxWords = 2000) {
@@ -207,17 +361,24 @@ function chunkManuscript(text, maxWords = 2000) {
   return chunks;
 }
 
-analyzeBtn.addEventListener("click", async () => {
-  const apiKey = apiKeyInput.value.trim();
+analyzeBtn.addEventListener("click", () => {
+  pendingFilterGroup = null;
+  runAudit();
+});
+
+async function runAudit() {
+  const apiKey = (localStorage.getItem("gemini_manuscript_api_key") || apiKeyInput.value).trim();
   const text = manuscriptText.value.trim();
   const model = getActiveModelId();
 
   if (!apiKey) {
-    setStatus("Enter your Gemini API key above before auditing.", true);
+    apiKeyModal.classList.remove("hidden");
+    apiKeyInput.focus();
+    setStatus("Please enter your Gemini API key first.", true);
     return;
   }
   if (!text) {
-    setStatus("Upload a manuscript or paste text first.", true);
+    setStatus("Paste manuscript text or attach a file first.", true);
     return;
   }
 
@@ -237,7 +398,7 @@ analyzeBtn.addEventListener("click", async () => {
     for (let i = 0; i < chunks.length; i++) {
       const sectionNum = i + 1;
       const chunkWords = Math.max(1, chunks[i].split(/\s+/).length);
-      setStatus(`Auditing section ${sectionNum} of ${chunks.length} (${chunkWords.toLocaleString()} words) with ${model}...`);
+      setStatus(`Auditing section ${sectionNum} of ${chunks.length} (${chunkWords.toLocaleString()} words) using ${model}...`);
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -296,7 +457,12 @@ analyzeBtn.addEventListener("click", async () => {
       findings: allFindings
     };
 
-    activeCategory = "All";
+    // Save to local browser history (keep latest 10)
+    const history = JSON.parse(localStorage.getItem("gemini_audit_history") || "[]");
+    history.unshift(currentReport);
+    localStorage.setItem("gemini_audit_history", JSON.stringify(history.slice(0, 10)));
+
+    activeCategory = pendingFilterGroup || "All";
     renderReport();
     setStatus("Audit complete.");
   } catch (err) {
@@ -304,12 +470,14 @@ analyzeBtn.addEventListener("click", async () => {
   } finally {
     analyzeBtn.disabled = false;
   }
-});
+}
 
 function renderReport() {
   if (!currentReport) return;
 
+  heroSection.classList.add("compact");
   reportSection.classList.remove("hidden");
+
   const score = currentReport.overall_ai_style_score;
   scoreBadge.textContent = `AI Style Score: ${score}/100`;
   scoreBadge.style.color = score >= 65 ? "var(--danger)" : score >= 35 ? "var(--warn)" : "var(--success)";
@@ -338,21 +506,28 @@ function renderReport() {
     filterBar.appendChild(btn);
   });
 
-  const visible = activeCategory === "All"
-    ? currentReport.findings
-    : currentReport.findings.filter(f => f.category === activeCategory);
+  let visible = currentReport.findings;
+  if (activeCategory.startsWith("GROUP:")) {
+    const groupKey = activeCategory.split(":")[1];
+    const allowed = CATEGORY_GROUPS[groupKey] || [];
+    visible = currentReport.findings.filter(f => allowed.includes(f.category));
+  } else if (activeCategory !== "All") {
+    visible = currentReport.findings.filter(f => f.category === activeCategory);
+  }
 
-  findingsList.innerHTML = visible.map((item, idx) => `
-    <div class="finding">
-      <div class="finding-top">
-        <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
-        <span class="cat-tag">Sec ${item.section} • ${escapeHtml(item.category)}</span>
+  findingsList.innerHTML = visible.length === 0
+    ? `<p class="muted-text">No instances flagged in this category.</p>`
+    : visible.map((item, idx) => `
+      <div class="finding">
+        <div class="finding-top">
+          <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
+          <span class="cat-tag">Sec ${item.section} • ${escapeHtml(item.category)}</span>
+        </div>
+        <div class="detail-line"><span class="detail-label">Original:</span> ${escapeHtml(item.sentence_context)}</div>
+        <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
+        <div class="detail-line rewrite-text"><span class="detail-label">Rewrite:</span> ${escapeHtml(item.human_rewrite)}</div>
       </div>
-      <div class="detail-line"><span class="detail-label">Original:</span> ${escapeHtml(item.sentence_context)}</div>
-      <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
-      <div class="detail-line rewrite-text"><span class="detail-label">Rewrite:</span> ${escapeHtml(item.human_rewrite)}</div>
-    </div>
-  `).join("");
+    `).join("");
 }
 
 function triggerDownload(content, filename, mimeType) {

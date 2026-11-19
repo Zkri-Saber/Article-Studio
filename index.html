@@ -4,86 +4,245 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Manuscript &amp; Style Forensics</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=4" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-  <script src="app.js?v=3" defer></script>
+  <script src="app.js?v=4" defer></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>AI Manuscript &amp; Style Forensics</h1>
-      <p class="subtitle">
-        Audit local manuscripts or pasted drafts for inflated AI buzzwords, formulaic transitions, filler phrases, and passive agency.
+  <div class="app-shell">
+    <!-- Left Slim Navigation Rail -->
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-badge" title="AI Style Forensics">&gt;_&lt;</div>
+
+      <nav class="rail-nav">
+        <button type="button" class="rail-item" id="navNewBtn" title="Start new audit">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>New</span>
+        </button>
+
+        <button type="button" class="rail-item" id="navHistoryBtn" title="Recent local audits">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <polyline points="12 7 12 12 15 14" />
+          </svg>
+          <span>History</span>
+        </button>
+
+        <button type="button" class="rail-item" id="navRubricBtn" title="Detection categories">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+            <polyline points="2 12 12 17 22 12" />
+            <polyline points="2 17 12 22 22 17" />
+          </svg>
+          <span>Rubric</span>
+        </button>
+
+        <button type="button" class="rail-item" id="navExportBtn" title="Download report">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+            <path d="M17.5 14v7M14.5 18l3 3 3-3" />
+          </svg>
+          <span>Export</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+      <!-- Top Right Action Pills -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <span class="workspace-tag">Style Forensics</span>
+        </div>
+        <div class="topbar-right">
+          <button type="button" class="btn-dark-pill" id="openKeyModalBtn">
+            <span id="keyStatusDot" class="status-dot"></span>
+            <span id="keyStatusLabel">Set API Key</span>
+          </button>
+          <button type="button" class="btn-light-pill" id="topSampleBtn">Load Sample Draft</button>
+        </div>
+      </header>
+
+      <!-- Centered Hero & Prompt Card -->
+      <main class="main-content" id="mainContainer">
+        <section class="hero-section">
+          <h1 class="hero-title">What manuscript can I audit?</h1>
+
+          <div class="prompt-card">
+            <!-- Attached File Pill (Hidden until file uploaded) -->
+            <div id="attachmentBar" class="attachment-bar hidden">
+              <div class="attachment-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                <span id="fileMeta">manuscript.docx</span>
+                <button type="button" id="removeFileBtn" class="chip-close" title="Remove file">&times;</button>
+              </div>
+            </div>
+
+            <textarea
+              id="manuscriptText"
+              class="prompt-textarea"
+              placeholder="Paste your manuscript draft or attach a .docx, .pdf, .md, .txt file..."
+              rows="5"
+            ></textarea>
+
+            <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf,.html,.htm" class="hidden" />
+
+            <!-- Bottom Card Toolbar -->
+            <div class="prompt-toolbar">
+              <div class="toolbar-left">
+                <button type="button" class="icon-btn" id="attachBtn" title="Attach local manuscript (.docx, .pdf, .md, .txt, .html)">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                  </svg>
+                </button>
+
+                <button type="button" class="icon-btn" id="clearBtn" title="Clear draft">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="toolbar-right">
+                <!-- Lavender Model Selector Pill (inspired by Magic pill) -->
+                <div class="magic-select-wrap" title="Choose Gemini model">
+                  <svg class="sparkle-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z" />
+                  </svg>
+                  <select id="modelSelect" aria-label="Gemini Model">
+                    <option value="gemini-3.8-flash" selected>3.8 Flash</option>
+                    <option value="gemini-3.1-pro-preview">3.1 Pro</option>
+                  </select>
+                </div>
+
+                <!-- Circular Submit Arrow Button -->
+                <button type="button" class="submit-circle" id="analyzeBtn" title="Run AI Style Audit">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5" />
+                    <polyline points="5 12 12 5 19 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Pill Chips Row -->
+          <div class="quick-chips">
+            <button type="button" class="action-chip" data-action="audit">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span>Full Audit</span>
+            </button>
+
+            <button type="button" class="action-chip" data-action="buzzwords">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+              </svg>
+              <span>Buzzwords</span>
+            </button>
+
+            <button type="button" class="action-chip" data-action="transitions">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6" />
+                <line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" />
+                <line x1="3" y1="6" x2="3.01" y2="6" />
+                <line x1="3" y1="12" x2="3.01" y2="12" />
+                <line x1="3" y1="18" x2="3.01" y2="18" />
+              </svg>
+              <span>Transitions</span>
+            </button>
+
+            <button type="button" class="action-chip" data-action="passive">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span>Passive Agency</span>
+            </button>
+
+            <button type="button" class="action-chip" data-action="sample">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              <span>Sample Text</span>
+            </button>
+          </div>
+
+          <!-- Progress & Status Feedback -->
+          <div id="progressWrap" class="progress-wrap hidden">
+            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+          <div id="statusMsg" class="status"></div>
+        </section>
+
+        <!-- Audit Report Card -->
+        <section id="reportSection" class="report-card hidden">
+          <div class="report-header">
+            <div>
+              <h2>Forensic Audit Report</h2>
+              <p id="reportStats" class="muted-text"></p>
+            </div>
+            <div class="export-group">
+              <div id="scoreBadge" class="score-badge">Score: --/100</div>
+              <button type="button" class="btn-light-pill" id="downloadMdBtn">Export .MD</button>
+              <button type="button" class="btn-light-pill" id="downloadJsonBtn">Export .JSON</button>
+            </div>
+          </div>
+
+          <div id="sectionSummaries" class="summaries-box"></div>
+          <div id="filterBar" class="filters"></div>
+          <div id="findingsList"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- API Key Modal -->
+  <div id="apiKeyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Configure Gemini API Key</h3>
+        <button type="button" class="chip-close" id="closeKeyModalBtn">&times;</button>
+      </div>
+      <p class="modal-desc">
+        Your key is saved strictly in your browser's <code>localStorage</code> and sent directly to Google's Gemini API.
       </p>
-    </header>
-
-    <section class="card">
-      <div class="grid-2">
-        <div>
-          <label for="apiKey">Gemini API Key (saved locally in your browser)</label>
-          <input type="password" id="apiKey" placeholder="AQ.... or AIzaSy..." autocomplete="off" />
-          <p class="hint">Stored only in your browser's <code>localStorage</code>. Never committed to GitHub.</p>
-        </div>
-        <div>
-          <label for="modelSelect">Gemini API Model</label>
-          <select id="modelSelect">
-            <option value="gemini-3.8-flash" selected>gemini-3.8-flash (Fast &amp; Recommended)</option>
-            <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Deep Editorial Review)</option>
-            <option value="custom">Custom Model ID...</option>
-          </select>
-          <input
-            type="text"
-            id="customModel"
-            class="hidden"
-            style="margin-top: 0.5rem;"
-            placeholder="e.g. gemini-3.8-flash"
-          />
-        </div>
+      <input type="password" id="apiKey" class="modal-input" placeholder="Paste your Gemini API key (AQ.... or AIzaSy...)" autocomplete="off" />
+      <div class="modal-actions">
+        <button type="button" class="btn-light-pill" id="clearKeyBtn">Remove Key</button>
+        <button type="button" class="btn-dark-pill" id="saveKeyBtn">Save Key</button>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="card">
-      <div class="file-bar">
-        <div>
-          <label for="fileInput">Upload Local Manuscript (.docx, .pdf, .md, .txt, .html)</label>
-          <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf,.html,.htm" />
-        </div>
-        <div id="fileMeta" class="file-meta">No file selected</div>
+  <!-- History & Rubric Drawer Modal -->
+  <div id="infoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-wide">
+      <div class="modal-head">
+        <h3 id="infoModalTitle">Audit History</h3>
+        <button type="button" class="chip-close" id="closeInfoModalBtn">&times;</button>
       </div>
-
-      <label for="manuscriptText">Manuscript Text</label>
-      <textarea id="manuscriptText" placeholder="Upload a manuscript file above or paste your text directly here..."></textarea>
-
-      <div class="btn-row">
-        <button type="button" id="analyzeBtn">Audit Manuscript</button>
-        <button type="button" class="secondary" id="sampleBtn">Load Sample Text</button>
-        <button type="button" class="secondary" id="clearBtn">Clear</button>
-      </div>
-
-      <div id="progressWrap" class="progress-wrap hidden">
-        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-      </div>
-      <div id="statusMsg" class="status"></div>
-    </section>
-
-    <section id="reportSection" class="card hidden">
-      <div class="summary-header">
-        <div>
-          <h2>Audit Report</h2>
-          <p id="reportStats" class="hint"></p>
-        </div>
-        <div class="export-group">
-          <div id="scoreBadge" class="score-badge">Score: --/100</div>
-          <button type="button" class="secondary" id="downloadMdBtn">Export .MD</button>
-          <button type="button" class="secondary" id="downloadJsonBtn">Export .JSON</button>
-        </div>
-      </div>
-
-      <div id="sectionSummaries" class="summaries-box"></div>
-      <div id="filterBar" class="filters"></div>
-      <div id="findingsList"></div>
-    </section>
+      <div id="infoModalBody" class="modal-body"></div>
+    </div>
   </div>
 </body>
 </html>
