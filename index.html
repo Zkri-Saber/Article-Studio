@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Article Studio — AI Style Forensics &amp; Literature Replacement Finder</title>
+  <title>Article Studio — Friendly Writing &amp; Citation Helper</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23e9d5ff'/%3E%3Cstop offset='100%25' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='36' height='36' rx='10' fill='url(%23g)'/%3E%3Cg transform='translate(6,6)' fill='none' stroke='%231e1b4b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6'/%3E%3Cline x1='8' y1='8' x2='13' y2='8'/%3E%3Cline x1='8' y1='12' x2='11' y2='12'/%3E%3Ccircle cx='16.5' cy='16.5' r='3.5'/%3E%3Cline x1='19.1' y1='19.1' x2='21.5' y2='21.5'/%3E%3Cpath d='M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z' fill='%231e1b4b' stroke='none'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,24 +12,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <style>
     :root {
-      --bg-page: #f9f9fb;
+      --bg-page: #f8f9fb;
       --bg-surface: #ffffff;
       --bg-subtle: #f3f4f6;
       --border: #e5e7eb;
       --border-strong: #d1d5db;
-      --text-primary: #18181b;
+      --text-primary: #1f2937;
       --text-secondary: #6b7280;
       --lavender-bg: #f5f3ff;
-      --lavender-border: #d8b4fe;
-      --lavender-text: #6b21a8;
-      --emerald-bg: #ecfdf5;
-      --emerald-border: #a7f3d0;
-      --emerald-text: #065f46;
-      --dark-pill: #18181b;
+      --lavender-border: #ddd6fe;
+      --lavender-text: #6d28d9;
+      --mint-bg: #ecfdf5;
+      --mint-border: #a7f3d0;
+      --mint-text: #065f46;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --amber-text: #b45309;
+      --dark-pill: #1f2937;
       --danger: #dc2626;
-      --warn: #d97706;
       --success: #059669;
-      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.045), 0 1px 3px rgba(0, 0, 0, 0.03);
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03);
       --shadow-chip: 0 1px 2px rgba(0, 0, 0, 0.04);
     }
 
@@ -64,9 +66,9 @@
     }
 
     .brand-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
       background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
       display: flex;
       align-items: center;
@@ -78,7 +80,7 @@
     .rail-nav {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       width: 100%;
       align-items: center;
     }
@@ -122,9 +124,9 @@
     }
 
     .workspace-tag {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--text-primary);
     }
 
     .topbar-right {
@@ -134,11 +136,12 @@
     }
 
     .api-badge {
-      background: var(--dark-pill);
-      color: #ffffff;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 12.5px;
+      background: var(--mint-bg);
+      color: var(--mint-text);
+      border: 1px solid var(--mint-border);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 12px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
@@ -172,13 +175,28 @@
       border-color: var(--border-strong);
     }
 
+    .btn-primary-pill {
+      background: var(--dark-pill);
+      color: #ffffff;
+      border: 1px solid var(--dark-pill);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-primary-pill:hover { opacity: 0.9; }
+
     /* Centered Hero Section */
     .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 32px 20px 64px;
+      padding: 28px 20px 64px;
     }
 
     .hero-section {
@@ -187,7 +205,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     .hero-section.compact { margin-top: 0; }
@@ -197,8 +215,17 @@
       font-weight: 600;
       letter-spacing: -0.025em;
       color: var(--text-primary);
-      margin: 0 0 24px;
+      margin: 0 0 8px;
       text-align: center;
+    }
+
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      margin: 0 0 22px;
+      text-align: center;
+      max-width: 580px;
+      line-height: 1.5;
     }
 
     /* Large Rounded Prompt Box */
@@ -217,1177 +244,15 @@
       box-shadow: 0 6px 28px rgba(139, 92, 246, 0.08);
     }
 
-    .attachment-bar { margin-bottom: 10px; }
-
-    .attachment-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    .chip-close {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 16px;
-      line-height: 1;
-      cursor: pointer;
-      padding: 0 2px;
-    }
-
-    .chip-close:hover { color: var(--text-primary); }
-
-    .prompt-textarea {
-      width: 100%;
-      border: none;
-      outline: none;
-      resize: vertical;
-      background: transparent;
-      font-family: inherit;
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--text-primary);
-      min-height: 112px;
-      max-height: 360px;
-    }
-
-    .prompt-textarea::placeholder { color: var(--text-secondary); }
-
-    .prompt-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      padding-top: 6px;
-    }
-
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: none;
-      background: transparent;
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .icon-btn:hover {
-      background: var(--bg-subtle);
-      color: var(--text-primary);
-    }
-
-    /* Lavender Mode Pill */
-    .magic-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--lavender-bg);
-      border: 1px solid var(--lavender-border);
-      color: var(--lavender-text);
-      border-radius: 999px;
-      padding: 5px 13px;
-      height: 34px;
-      font-size: 13px;
-      font-weight: 500;
-      user-select: none;
-    }
-
-    .sparkle-icon {
-      color: #7c3aed;
-      flex-shrink: 0;
-    }
-
-    /* Circular Submit Arrow Button */
-    .submit-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: #8e8e93;
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.1s ease;
-    }
-
-    .submit-circle.active { background: var(--dark-pill); }
-
-    .submit-circle:hover {
-      background: var(--dark-pill);
-      transform: translateY(-1px);
-    }
-
-    /* Quick-Action Pill Chips Row */
-    .quick-chips {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .action-chip {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 14px;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      box-shadow: var(--shadow-chip);
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-    }
-
-    .action-chip:hover {
-      background: var(--bg-subtle);
-      border-color: var(--border-strong);
-      transform: translateY(-1px);
-    }
-
-    .action-chip svg { color: var(--text-secondary); }
-
-    .status {
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      text-align: center;
-    }
-
-    .status.error {
-      color: var(--danger);
-      font-weight: 500;
-    }
-
-    /* Report Section */
-    .report-card {
-      width: 100%;
-      max-width: 880px;
-      margin-top: 28px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: var(--shadow-card);
-    }
-
-    .report-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
-    }
-
-    .report-header h2 {
-      margin: 0 0 2px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .muted-text {
-      margin: 0;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .export-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .score-badge {
-      font-size: 13px;
-      font-weight: 700;
-      padding: 7px 13px;
-      border-radius: 10px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-    }
-
-    /* Domain Context Bar */
-    .topic-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      background: var(--lavender-bg);
-      border: 1px solid var(--lavender-border);
-      border-radius: 14px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-      font-size: 13px;
-      color: var(--lavender-text);
-    }
-
-    .topic-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .topic-input {
-      background: #ffffff;
-      border: 1px solid var(--lavender-border);
-      border-radius: 8px;
-      padding: 5px 10px;
-      font-size: 12.5px;
-      font-family: inherit;
-      color: var(--text-primary);
-      width: 210px;
-      outline: none;
-    }
-
-    .breakdown-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .breakdown-pill {
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 11px;
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
-
-    .breakdown-pill strong { color: var(--text-primary); }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-
-    .filter-pill {
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .filter-pill.active {
-      background: var(--lavender-bg);
-      border-color: var(--lavender-border);
-      color: var(--lavender-text);
-      font-weight: 600;
-    }
-
-    .finding {
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-
-    .finding-top {
+    .attachment-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .matched-word {
-      font-weight: 600;
-      color: var(--warn);
-      font-size: 14.5px;
-    }
-
-    .cat-tag {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: var(--lavender-bg);
-      color: var(--lavender-text);
-      border: 1px solid var(--lavender-border);
-    }
-
-    .detail-line {
-      font-size: 13.5px;
-      line-height: 1.55;
-      margin: 4px 0;
-      color: var(--text-primary);
-    }
-
-    .detail-label {
-      color: var(--text-secondary);
-      font-weight: 600;
-      display: inline-block;
-      min-width: 86px;
-    }
-
-    .rewrite-text {
-      color: var(--success);
-      font-weight: 500;
-    }
-
-    /* Interactive Replacement Word Pills & Article Search Button */
-    .replacement-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 7px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-    }
-
-    .rep-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .rep-word-btn {
-      background: var(--emerald-bg);
-      border: 1px solid var(--emerald-border);
-      color: var(--emerald-text);
-      border-radius: 999px;
-      padding: 4px 11px;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: transform 0.1s ease, background 0.15s ease;
-    }
-
-    .rep-word-btn:hover {
-      background: #d1fae5;
-      transform: translateY(-1px);
-    }
-
-    .rep-word-btn.active {
-      background: #059669;
-      border-color: #059669;
-      color: #ffffff;
-    }
-
-    /* Inline Published Articles Drawer inside a Finding Card */
-    .articles-panel {
-      margin-top: 10px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-    }
-
-    .articles-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .article-hit {
-      padding: 9px 10px;
-      border-radius: 10px;
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      margin-bottom: 8px;
-    }
-
-    .article-hit:last-child { margin-bottom: 0; }
-
-    .article-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      text-decoration: none;
-      display: inline-block;
-      margin-bottom: 3px;
-    }
-
-    .article-title:hover {
-      color: #6d28d9;
-      text-decoration: underline;
-    }
-
-    .article-meta {
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      margin-bottom: 5px;
-    }
-
-    .article-sentence {
-      font-size: 12.8px;
-      line-height: 1.5;
-      color: var(--text-primary);
-      background: #ffffff;
-      border-left: 3px solid var(--success);
-      padding: 5px 9px;
-      border-radius: 4px;
-    }
-
-    .article-sentence mark {
-      background: #d1fae5;
-      color: #065f46;
-      font-weight: 700;
-      padding: 0 3px;
-      border-radius: 3px;
-    }
-
-    /* Modals */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(24, 24, 27, 0.35);
-      backdrop-filter: blur(2px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 50;
-    }
-
-    .modal-card {
-      width: 100%;
-      max-width: 620px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 20px 22px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin-bottom: 10px;
     }
 
-    .modal-head h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .modal-body {
-      max-height: 64vh;
-      overflow-y: auto;
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
-
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-bottom: 8px;
-      background: var(--bg-page);
-    }
-
-    .hidden { display: none !important; }
-
-    @media (max-width: 640px) {
-      .sidebar { width: 56px; padding: 12px 4px; }
-      .rail-item span { display: none; }
-      .hero-title { font-size: 22px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="app-shell">
-    <!-- Slim Left Navigation Rail -->
-    <aside class="sidebar" aria-label="Primary navigation">
-      <div class="brand-badge" title="Article Studio — AI Manuscript Audit &amp; Literature Lookup">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
-          <line x1="8" y1="8" x2="13" y2="8" />
-          <line x1="8" y1="12" x2="11" y2="12" />
-          <circle cx="16.5" cy="16.5" r="3.5" />
-          <line x1="19.1" y1="19.1" x2="21.5" y2="21.5" />
-          <path d="M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z" fill="#1e1b4b" stroke="none" />
-        </svg>
-      </div>
-
-      <nav class="rail-nav">
-        <button type="button" class="rail-item" id="navNewBtn" title="Start new audit">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          <span>New</span>
-        </button>
-
-        <button type="button" class="rail-item" id="navHistoryBtn" title="Recent local audits">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9" />
-            <polyline points="12 7 12 12 15 14" />
-          </svg>
-          <span>History</span>
-        </button>
-
-        <button type="button" class="rail-item" id="navRubricBtn" title="Detection categories">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2" />
-            <polyline points="2 12 12 17 22 12" />
-            <polyline points="2 17 12 22 22 17" />
-          </svg>
-          <span>Rubric</span>
-        </button>
-
-        <button type="button" class="rail-item" id="navExportBtn" title="Download Markdown report">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-            <path d="M17.5 14v7M14.5 18l3 3 3-3" />
-          </svg>
-          <span>Export</span>
-        </button>
-      </nav>
-    </aside>
-
-    <!-- Main Workspace -->
-    <div class="workspace">
-      <header class="topbar">
-        <div class="topbar-left">
-          <span class="workspace-tag">Article Studio</span>
-        </div>
-        <div class="topbar-right">
-          <span class="api-badge" title="Detects AI words offline &amp; queries OpenAlex Scholarly API for human replacement examples">
-            <span class="status-dot"></span>
-            <span>OpenAlex Literature API Ready</span>
-          </span>
-          <button type="button" class="btn-light-pill" id="topSampleBtn">Load Sample Draft</button>
-        </div>
-      </header>
-
-      <main class="main-content" id="mainContainer">
-        <section class="hero-section">
-          <h1 class="hero-title">What manuscript can I audit?</h1>
-
-          <div class="prompt-card">
-            <div id="attachmentBar" class="attachment-bar hidden">
-              <div class="attachment-chip">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                </svg>
-                <span id="fileMeta">manuscript.docx</span>
-                <button type="button" id="removeFileBtn" class="chip-close" title="Remove file">&times;</button>
-              </div>
-            </div>
-
-            <textarea
-              id="manuscriptText"
-              class="prompt-textarea"
-              placeholder="Paste your manuscript draft or attach a .docx, .pdf, .md, .txt, .html file..."
-              rows="5"
-            ></textarea>
-
-            <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf,.html,.htm" class="hidden" />
-
-            <div class="prompt-toolbar">
-              <div class="toolbar-left">
-                <button type="button" class="icon-btn" id="attachBtn" title="Attach local manuscript (.docx, .pdf, .md, .txt, .html)">
-                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-                  </svg>
-                </button>
-
-                <button type="button" class="icon-btn" id="clearBtn" title="Clear draft">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                    <path d="M10 11v6M14 11v6" />
-                  </svg>
-                </button>
-              </div>
-
-              <div class="toolbar-right">
-                <div class="magic-pill" title="Audits locally &amp; finds published replacement examples via OpenAlex API">
-                  <svg class="sparkle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z" />
-                  </svg>
-                  <span>Audit + Article API</span>
-                </div>
-
-                <button type="button" class="submit-circle" id="analyzeBtn" title="Run AI Style Audit">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="19" x2="12" y2="5" />
-                    <polyline points="5 12 12 5 19 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="quick-chips">
-            <button type="button" class="action-chip" data-action="audit">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <span>Full Audit</span>
-            </button>
-
-            <button type="button" class="action-chip" data-action="buzzwords">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-              </svg>
-              <span>Buzzwords</span>
-            </button>
-
-            <button type="button" class="action-chip" data-action="transitions">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-              </svg>
-              <span>Transitions</span>
-            </button>
-
-            <button type="button" class="action-chip" data-action="passive">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <span>Passive Agency</span>
-            </button>
-
-            <button type="button" class="action-chip" data-action="sample">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              <span>Sample Text</span>
-            </button>
-          </div>
-
-          <div id="statusMsg" class="status"></div>
-        </section>
-
-        <!-- Audit Report Card -->
-        <section id="reportSection" class="report-card hidden">
-          <div class="report-header">
-            <div>
-              <h2>Forensic Audit &amp; Literature Replacement Report</h2>
-              <p id="reportStats" class="muted-text"></p>
-            </div>
-            <div class="export-group">
-              <div id="scoreBadge" class="score-badge">Score: --/100</div>
-              <button type="button" class="btn-light-pill" id="downloadMdBtn">Export .MD</button>
-              <button type="button" class="btn-light-pill" id="downloadJsonBtn">Export .JSON</button>
-            </div>
-          </div>
-
-          <!-- Detected Manuscript Domain Filter for OpenAlex Article Searches -->
-          <div class="topic-bar">
-            <span><strong>Article Search Domain:</strong> Filter published replacement examples by topic</span>
-            <div class="topic-controls">
-              <input type="text" id="topicContextInput" class="topic-input" placeholder="e.g. thyroid machine learning" />
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;">
-                <input type="checkbox" id="useTopicCheck" checked />
-                <span>Scope to my topic</span>
-              </label>
-            </div>
-          </div>
-
-          <div id="breakdownBox" class="breakdown-grid"></div>
-          <div id="filterBar" class="filters"></div>
-          <div id="findingsList"></div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <!-- History & Rubric Modal -->
-  <div id="infoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="infoModalTitle">Audit History</h3>
-        <button type="button" class="chip-close" id="closeInfoModalBtn">&times;</button>
-      </div>
-      <div id="infoModalBody" class="modal-body"></div>
-    </div>
-  </div>
-
-  <script>
-    // -----------------------------------------------------------------------
-    // 1. AI BUZZWORDS & LEXICON WITH STRUCTURED REPLACEMENT WORDS
-    //    Format: [regexPattern, guidanceText, [replacementWordsForArticleSearch]]
-    // -----------------------------------------------------------------------
-    const INFLATED_VERBS = [
-      ["\\bdelv(?:e|es|ed|ing)\\b", "Replace with: examine, investigate, or explore.", ["examine", "investigate", "explore"]],
-      ["\\bunderscor(?:e|es|ed|ing)\\b", "Replace with: emphasize, show, or highlight.", ["emphasize", "demonstrate", "highlight"]],
-      ["\\bleverag(?:e|es|ed|ing)\\b", "Replace with: use, apply, or employ.", ["use", "apply", "employ"]],
-      ["\\bfoster(?:s|ed|ing)?\\b", "Replace with: encourage, support, or promote.", ["encourage", "support", "promote"]],
-      ["\\bspearhead(?:s|ed|ing)?\\b", "Replace with: lead, direct, or initiate.", ["lead", "direct", "initiate"]],
-      ["\\bstreamlin(?:e|es|ed|ing)\\b", "Replace with: simplify, accelerate, or refine.", ["simplify", "accelerate", "refine"]],
-      ["\\bbolster(?:s|ed|ing)?\\b", "Replace with: strengthen, support, or reinforce.", ["strengthen", "support", "reinforce"]],
-      ["\\belevat(?:e|es|ed|ing)\\b", "Replace with: improve, increase, or raise.", ["improve", "increase", "raise"]],
-      ["\\bharness(?:es|ed|ing)?\\b", "Replace with: use, capture, or apply.", ["use", "capture", "apply"]],
-      ["\\bnavigat(?:e|es|ed|ing)\\b", "Replace with: manage, address, or handle.", ["manage", "address", "handle"]],
-      ["\\bunlock(?:s|ed|ing)?\\b", "Replace with: enable, reveal, or identify.", ["enable", "reveal", "identify"]],
-      ["\\brevolutioniz(?:e|es|ed|ing)\\b", "Replace with: transform, reshape, or alter.", ["reshape", "alter", "advance"]],
-      ["\\bcatalyz(?:e|es|ed|ing)\\b", "Replace with: trigger, accelerate, or stimulate.", ["trigger", "accelerate", "stimulate"]],
-      ["\\boptimiz(?:e|es|ed|ing)\\b", "Replace with: improve, tune, or refine.", ["improve", "refine", "calibrate"]],
-      ["\\bfacilitat(?:e|es|ed|ing)\\b", "Replace with: enable, assist, or allow.", ["enable", "assist", "allow"]],
-      ["\\bempower(?:s|ed|ing)?\\b", "Replace with: enable, allow, or permit.", ["enable", "allow", "permit"]],
-      ["\\baugmen(?:t|ts|ted|ting)\\b", "Replace with: supplement, expand, or increase.", ["supplement", "expand", "increase"]],
-      ["\\belucidat(?:e|es|ed|ing)\\b", "Replace with: clarify, explain, or determine.", ["clarify", "explain", "determine"]],
-      ["\\bexemplif(?:y|ies|ied|ying)\\b", "Replace with: illustrate, show, or represent.", ["illustrate", "represent", "confirm"]]
-    ];
-
-    const INFLATED_ADJECTIVES = [
-      ["\\bpivotal\\b", "Replace with: key, central, or critical.", ["central", "critical", "primary"]],
-      ["\\btransformative\\b", "Replace with: major, substantial, or notable.", ["substantial", "notable", "significant"]],
-      ["\\bseamless\\b", "Replace with: smooth, direct, or continuous.", ["continuous", "integrated", "direct"]],
-      ["\\brobust\\b", "Replace with: reliable, consistent, or rigorous.", ["reliable", "consistent", "rigorous"]],
-      ["\\bintricate\\b", "Replace with: complex, detailed, or elaborate.", ["complex", "detailed", "structured"]],
-      ["\\bmultifaceted\\b", "Replace with: varied, complex, or multi-factor.", ["complex", "diverse", "heterogeneous"]],
-      ["\\bcomprehensive\\b", "Replace with: complete, thorough, or extensive.", ["thorough", "extensive", "complete"]],
-      ["\\bgroundbreaking\\b", "Replace with: novel, original, or early.", ["novel", "original", "initial"]],
-      ["\\bholistic\\b", "Replace with: integrated, whole-system, or broad.", ["integrated", "broad", "systemic"]],
-      ["\\bparamount\\b", "Replace with: primary, essential, or principal.", ["primary", "essential", "principal"]],
-      ["\\bnuanced\\b", "Replace with: subtle, detailed, or specific.", ["subtle", "specific", "detailed"]],
-      ["\\bcutting[- ]edge\\b", "Replace with: recent, modern, or current.", ["recent", "current", "contemporary"]],
-      ["\\bstate[- ]of[- ]the[- ]art\\b", "Replace with: current, benchmark, or leading.", ["benchmark", "current", "standard"]],
-      ["\\bdynamic\\b", "Replace with: variable, active, or changing.", ["variable", "temporal", "changing"]],
-      ["\\bunprecedented\\b", "Replace with: unmatched, rare, or novel.", ["novel", "rare", "notable"]],
-      ["\\bindispensable\\b", "Replace with: essential, necessary, or required.", ["essential", "necessary", "required"]],
-      ["\\bmeticulous\\b", "Replace with: careful, systematic, or rigorous.", ["careful", "systematic", "rigorous"]],
-      ["\\bubiquitous\\b", "Replace with: widespread, common, or prevalent.", ["widespread", "common", "prevalent"]]
-    ];
-
-    const INFLATED_NOUNS = [
-      ["\\btapestr(?:y|ies)\\b", "Replace with: mixture, pattern, or diversity.", ["pattern", "diversity", "spectrum"]],
-      ["\\btestament\\b", "Replace with: evidence, proof, or indication.", ["evidence", "indication", "confirmation"]],
-      ["\\blandscapes?\\b", "Replace with: field, literature, or setting.", ["literature", "field", "setting"]],
-      ["\\bparadigms?\\b", "Replace with: model, approach, or method.", ["model", "approach", "method"]],
-      ["\\bsynerg(?:y|ies)\\b", "Replace with: interaction, cooperation, or combined effect.", ["interaction", "cooperation", "combination"]],
-      ["\\brealms?\\b", "Replace with: domain, field, or area.", ["domain", "field", "area"]],
-      ["\\bcornerstones?\\b", "Replace with: foundation, basis, or core.", ["foundation", "basis", "core"]],
-      ["\\bcatalysts?\\b", "Replace with: driver, trigger, or factor.", ["driver", "trigger", "factor"]],
-      ["\\bmosaics?\\b", "Replace with: combination, pattern, or mixture.", ["combination", "pattern", "mixture"]],
-      ["\\binterplay\\b", "Replace with: interaction, relationship, or association.", ["interaction", "relationship", "association"]],
-      ["\\becosystems?\\b", "Replace with: network, environment, or infrastructure.", ["network", "environment", "infrastructure"]],
-      ["\\btrajector(?:y|ies)\\b", "Replace with: course, progression, or trend.", ["progression", "trend", "course"]],
-      ["\\bplethora\\b", "Replace with: variety, range, or abundance.", ["variety", "range", "number"]],
-      ["\\bmyriad\\b", "Replace with: numerous, multiple, or diverse.", ["numerous", "multiple", "diverse"]]
-    ];
-
-    const INFLATED_ADVERBS = [
-      ["\\bmeticulously\\b", "Replace with: carefully, systematically, or rigorously.", ["carefully", "systematically", "rigorously"]],
-      ["\\bseamlessly\\b", "Replace with: smoothly, directly, or readily.", ["directly", "readily", "smoothly"]],
-      ["\\bprofoundly\\b", "Replace with: strongly, markedly, or substantially.", ["strongly", "markedly", "substantially"]],
-      ["\\binherently\\b", "Replace with: intrinsically, naturally, or structurally.", ["intrinsically", "naturally", "by nature"]],
-      ["\\bundeniably\\b", "Replace with: clearly, evidently, or demonstrably.", ["clearly", "evidently", "demonstrably"]],
-      ["\\bfundamentally\\b", "Replace with: primarily, essentially, or largely.", ["primarily", "largely", "basically"]],
-      ["\\bexponentially\\b", "Replace with: rapidly, sharply, or markedly.", ["rapidly", "sharply", "markedly"]],
-      ["\\bsignificantly\\b", "Replace with: markedly, notably, or statistically (if p-value tested).", ["markedly", "notably", "substantially"]],
-      ["\\bsubstantially\\b", "Replace with: considerably, largely, or markedly.", ["considerably", "largely", "markedly"]]
-    ];
-
-    // -----------------------------------------------------------------------
-    // 2. FORMULAIC TRANSITIONS, LIST SIGNPOSTS & FILLER PHRASES
-    // -----------------------------------------------------------------------
-    const SENTENCE_INITIAL_ADVERBS = [
-      ["^\\s*Furthermore\\b[,]?", "Cut or replace with: In addition, Also, or direct subject.", ["In addition", "Also"]],
-      ["^\\s*Moreover\\b[,]?", "Cut or replace with: In addition, Similarly, or direct claim.", ["In addition", "Similarly"]],
-      ["^\\s*Additionally\\b[,]?", "Replace with: Also or In addition.", ["Also", "In addition"]],
-      ["^\\s*Consequently\\b[,]?", "Replace with: As a result or Therefore.", ["As a result", "Therefore"]],
-      ["^\\s*Notably\\b[,]?", "Cut editorializing or use: Specifically or In particular.", ["Specifically", "In particular"]],
-      ["^\\s*Ultimately\\b[,]?", "Cut or replace with: Finally or Overall.", ["Overall", "Finally"]],
-      ["^\\s*Essentially\\b[,]?", "Cut throat-clearing; state the definition directly.", ["Specifically", "In practice"]],
-      ["^\\s*Conversely\\b[,]?", "Replace with: In contrast or However.", ["In contrast", "However"]],
-      ["^\\s*Interestingly\\b[,]?", "Cut subjective adverb; present the observation directly.", ["Notably", "Specifically"]],
-      ["^\\s*Nonetheless\\b[,]?", "Replace with: However or Despite this.", ["However", "Despite this"]],
-      ["^\\s*Nevertheless\\b[,]?", "Replace with: However or Yet.", ["However", "Yet"]]
-    ];
-
-    const RIGID_LIST_SIGNPOSTS = [
-      ["^\\s*Firstly\\b[,]?", "Replace with: First, or integrate naturally.", ["First"]],
-      ["^\\s*Secondly\\b[,]?", "Replace with: Second, or link via topic.", ["Second"]],
-      ["^\\s*Thirdly\\b[,]?", "Replace with: Third, or link via topic.", ["Third"]],
-      ["^\\s*Lastly\\b[,]?", "Replace with: Finally, or state the final point.", ["Finally"]],
-      ["^\\s*On (?:the )?one hand\\b[,]?", "State the first finding directly without stock framing.", ["Whereas", "While"]],
-      ["^\\s*On the other hand\\b[,]?", "Replace with: In contrast or However.", ["In contrast", "However"]],
-      ["^\\s*In summary\\b[,]?", "Cut signpost and deliver the synthesis directly.", ["Overall", "Taken together"]],
-      ["^\\s*In conclusion\\b[,]?", "Cut signpost and state the takeaway directly.", ["Overall", "Taken together"]],
-      ["^\\s*To conclude\\b[,]?", "Cut signpost and state the conclusion directly.", ["Overall", "Taken together"]],
-      ["\\bKey takeaways include\\s*:?", "Introduce the specific findings directly.", ["Findings indicate", "Results show"]]
-    ];
-
-    const FILLER_PHRASES = [
-      ["\\bit is important to note that\\b", "Delete filler; start with the actual subject.", ["Notably", "Specifically"]],
-      ["\\bit is worth noting that\\b", "Delete filler; state the observation directly.", ["Specifically", "In particular"]],
-      ["\\bit should be noted that\\b", "Delete filler; state the point directly.", ["Specifically", "Here"]],
-      ["\\bin today'?s (?:fast[- ]paced |rapidly evolving |modern )?(?:digital )?(?:landscape|world|era)\\b", "Replace generic opener with a concrete timeframe or clinical context.", ["In current practice", "Recently"]],
-      ["\\bwhen it comes to\\b", "Replace with: regarding, for, or in.", ["regarding", "concerning"]],
-      ["\\ba testament to\\b", "Replace with: evidence of or consistent with.", ["evidence of", "consistent with"]],
-      ["\\bplays? a (?:crucial|pivotal|vital|key|critical) role in\\b", "Replace with an active verb: regulates, drives, mediates, or affects.", ["regulates", "mediates", "influences"]],
-      ["\\bin the realm of\\b", "Replace with: in or within.", ["within", "across"]],
-      ["\\bpave(?:s|d|ing)? the way for\\b", "Replace with: enable, support, or lead to.", ["enable", "support"]],
-      ["\\bbridge(?:s|d|ing)? the gap between\\b", "Replace with: link, connect, or integrate.", ["connect", "integrate"]],
-      ["\\bdelve(?:s|d|ing)? into\\b", "Replace with: examine, investigate, or evaluate.", ["examine", "investigate", "evaluate"]],
-      ["\\bshed(?:s|ding)? light on\\b", "Replace with: clarify, characterize, or reveal.", ["clarify", "characterize", "reveal"]]
-    ];
-
-    // -----------------------------------------------------------------------
-    // 3. DISEMBODIED / AUTOMATED PHRASING & PASSIVE AGENCY
-    // -----------------------------------------------------------------------
-    const ABSTRACT_SUBJECT_PATTERN =
-      "\\b(?:the|this|these|our|modern|advanced|current|proposed)?\\s*" +
-      "(?:platform|system|systems|algorithm|algorithms|model|models|framework|frameworks|" +
-      "software|solution|solutions|technology|technologies|tool|tools|data|datasets|" +
-      "insights|study|paper|review|approach|methodology|ecosystem|automation|ai|" +
-      "machine learning|deep learning|neural networks?)\\s+" +
-      "(?:empowers?|enables?|facilitates?|drives?|dictates?|underscores?|highlights?|" +
-      "demonstrates?|unlocks?|revolutionizes?|transforms?|bridges?|navigates?|" +
-      "harnesses?|fosters?|elevates?|spearheads?|streamlines?|optimizes?|catalyzes?|" +
-      "ensures?|delivers?|provides?)\\b";
-
-    const PASSIVE_VOICE_PATTERN =
-      "\\b(?:is|are|was|were|be|been|being)\\s+" +
-      "(?:[a-z]+ly\\s+)?" +
-      "(" +
-      "[a-z]{3,}ed|" +
-      "shown|found|seen|known|given|taken|made|built|held|led|read|said|sent|set|" +
-      "drawn|driven|chosen|written|broken|spoken|proven|undertaken|overcome" +
-      ")\\b";
-
-    const PASSIVE_FALSE_POSITIVES = new Set([
-      "interested", "tired", "pleased", "excited", "worried", "concerned",
-      "satisfied", "disappointed", "surprised", "bored", "confused", "crowded",
-      "married", "divorced", "located", "situated", "related", "associated",
-      "paired", "coupled", "limited", "restricted", "dedicated", "committed",
-      "advanced", "detailed", "sophisticated", "established", "experienced"
-    ]);
-
-    const STOPWORDS = new Set([
-      "the","and","for","that","this","with","from","are","was","were","been","have","has","had",
-      "not","but","what","all","when","can","there","their","which","she","how","will","other",
-      "about","out","many","then","them","these","some","her","would","make","like","him","into",
-      "time","look","two","more","write","see","number","way","could","people","than","first",
-      "water","been","call","who","its","now","find","long","down","day","did","get","come",
-      "made","may","part","over","new","sound","take","only","little","work","know","place",
-      "years","live","back","give","most","very","after","things","our","just","name","good",
-      "sentence","man","think","say","great","where","help","through","much","before","line",
-      "right","too","means","old","any","same","tell","following","also","around","form","three",
-      "small","set","put","end","does","another","well","large","must","big","even","such",
-      "because","turn","here","why","ask","went","men","read","need","land","different","home",
-      "move","try","kind","hand","picture","again","change","off","play","spell","air","away",
-      "animal","house","point","page","letter","mother","answer","found","study","still","learn",
-      "should","world","high","every","near","add","between","own","below","country","plant",
-      "last","school","father","keep","tree","never","start","city","earth","eyes","light",
-      "thought","head","under","story","saw","left","few","while","along","might","close",
-      "something","seem","next","hard","open","example","begin","life","always","those","both",
-      "paper","together","got","group","often","run","important","until","children","side","feet",
-      "car","mile","night","walk","white","sea","began","grow","took","river","four","carry",
-      "state","once","book","hear","stop","without","second","later","miss","idea","enough",
-      "eat","face","watch","far","really","almost","let","above","sometimes","mountains","cut",
-      "young","talk","soon","list","song","being","leave","family","body","music","color","stand",
-      "questions","fish","area","mark","dog","horse","birds","problem","complete","room","knew",
-      "since","ever","piece","told","usually","friends","easy","heard","order","red","door",
-      "sure","become","top","ship","across","today","during","short","better","best","however",
-      "low","hours","black","products","happened","whole","measure","remember","early","waves",
-      "reached","listen","wind","rock","space","covered","fast","several","hold","himself",
-      "toward","five","step","morning","passed","vowel","true","hundred","against","pattern",
-      "numeral","table","north","slowly","money","map","farm","pulled","draw","voice","seen",
-      "cold","cried","plan","notice","south","sing","war","ground","fall","king","town","unit",
-      "figure","certain","field","travel","wood","fire","upon","done","english","road","half",
-      "ten","fly","gave","box","finally","wait","correct","quickly","person","became","shown",
-      "minutes","strong","verb","stars","front","feel","fact","inches","street","decided",
-      "contain","course","surface","produce","building","ocean","class","note","nothing","rest",
-      "carefully","scientists","inside","wheels","stay","green","known","island","week","less",
-      "machine","base","ago","stood","plane","system","behind","ran","round","boat","game",
-      "force","brought","understand","warm","common","bring","explain","dry","though","language",
-      "shape","deep","thousands","yes","clear","equation","yet","government","filled","heat",
-      "full","hot","check","object","am","rule","among","nounThis updated **`index.html`** keeps your instant **offline AI-style detector** and connects every detected AI buzzword or stock phrase to the **OpenAlex Scholarly Works API** (free, no API key required, full CORS support for GitHub Pages) to find real peer-reviewed articles that use the replacement words in context.
-
-### How the Replacement Article Finder Works
-
-1. **Detects AI-Favored Instances Offline:** Scans your manuscript locally for inflated verbs, adjectives, nouns, adverbs, formulaic transitions, filler phrases, and passive agency.
-2. **Auto-Detects Your Research Topic:** Extracts domain terms from your draft's title and opening paragraphs (e.g., *thyroid*, *hypothyroidism*, *learning*) so article searches prioritize papers in your field—with a toggle to switch to **Any Academic Field**.
-3. **Finds Published Sentences with Replacement Words:** Click any green replacement pill (such as **`examine`**, **`use`**, **`apply`**, **`central`**, or **`evidence`**) on a flagged card—or type your own replacement word—to fetch matching papers from OpenAlex, reconstruct their abstracts, highlight the exact sentence where human authors used that replacement word, and display the paper's title, journal, year, citation count, and DOI link.
-
-### Replace `index.html` in `zkri-saber/Article-Studio`
-
-Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, select all (`Ctrl + A`), paste the complete file below, and click **Commit changes**:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Article Studio — AI Style Forensics &amp; Literature Replacement Finder</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' viewBox='0 0 36 36'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23e9d5ff'/%3E%3Cstop offset='100%25' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='36' height='36' rx='10' fill='url(%23g)'/%3E%3Cg transform='translate(6,6)' fill='none' stroke='%231e1b4b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6'/%3E%3Cline x1='8' y1='8' x2='13' y2='8'/%3E%3Cline x1='8' y1='12' x2='11' y2='12'/%3E%3Ccircle cx='16.5' cy='16.5' r='3.5'/%3E%3Cline x1='19.1' y1='19.1' x2='21.5' y2='21.5'/%3E%3Cpath d='M19 2.5l.65 1.85L21.5 5l-1.85.65L19 7.5l-.65-1.85L16.5 5l1.85-.65L19 2.5z' fill='%231e1b4b' stroke='none'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)" />
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin />
-  <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap)" rel="stylesheet" />
-  <script src="[https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js](https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js)" defer></script>
-  <script src="[https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js](https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js)" defer></script>
-  <style>
-    :root {
-      --bg-page: #f9f9fb;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f3f4f6;
-      --border: #e5e7eb;
-      --border-strong: #d1d5db;
-      --text-primary: #18181b;
-      --text-secondary: #6b7280;
-      --lavender-bg: #f5f3ff;
-      --lavender-border: #d8b4fe;
-      --lavender-text: #6b21a8;
-      --emerald-bg: #ecfdf5;
-      --emerald-border: #a7f3d0;
-      --emerald-text: #065f46;
-      --dark-pill: #18181b;
-      --danger: #dc2626;
-      --warn: #d97706;
-      --success: #059669;
-      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.045), 0 1px 3px rgba(0, 0, 0, 0.03);
-      --shadow-chip: 0 1px 2px rgba(0, 0, 0, 0.04);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-page);
-      color: var(--text-primary);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .app-shell {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* Slim Left Navigation Rail */
-    .sidebar {
-      width: 72px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px 8px;
-      gap: 24px;
-      background: var(--bg-page);
-      position: sticky;
-      top: 0;
-      height: 100vh;
-    }
-
-    .brand-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(192, 132, 252, 0.35);
-      user-select: none;
-    }
-
-    .rail-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      width: 100%;
-      align-items: center;
-    }
-
-    .rail-item {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      padding: 8px 6px;
-      width: 58px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 500;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .rail-item:hover {
-      background: var(--bg-subtle);
-      color: var(--text-primary);
-    }
-
-    /* Main Workspace */
-    .workspace {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 24px;
-    }
-
-    .workspace-tag {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .api-badge {
-      background: var(--dark-pill);
-      color: #ffffff;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 12.5px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      user-select: none;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #10b981;
-    }
-
-    .btn-light-pill {
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      box-shadow: var(--shadow-chip);
-      transition: background 0.15s ease, border-color 0.15s ease;
-    }
-
-    .btn-light-pill:hover {
-      background: var(--bg-subtle);
-      border-color: var(--border-strong);
-    }
-
-    /* Centered Hero Section */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 20px 64px;
-    }
-
-    .hero-section {
-      width: 100%;
-      max-width: 760px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-
-    .hero-section.compact { margin-top: 0; }
-
-    .hero-title {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.025em;
-      color: var(--text-primary);
-      margin: 0 0 24px;
-      text-align: center;
-    }
-
-    /* Large Rounded Prompt Box */
-    .prompt-card {
-      width: 100%;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 18px 20px 14px;
-      box-shadow: var(--shadow-card);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .prompt-card:focus-within {
-      border-color: #c4b5fd;
-      box-shadow: 0 6px 28px rgba(139, 92, 246, 0.08);
-    }
-
-    .attachment-bar { margin-bottom: 10px; }
-
     .attachment-chip {
       display: inline-flex;
       align-items: center;
@@ -1421,10 +286,10 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       background: transparent;
       font-family: inherit;
       font-size: 15px;
-      line-height: 1.6;
+      line-height: 1.65;
       color: var(--text-primary);
-      min-height: 112px;
-      max-height: 360px;
+      min-height: 120px;
+      max-height: 380px;
     }
 
     .prompt-textarea::placeholder { color: var(--text-secondary); }
@@ -1434,7 +299,8 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       justify-content: space-between;
       align-items: center;
       margin-top: 10px;
-      padding-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid #f3f4f6;
     }
 
     .toolbar-left,
@@ -1445,15 +311,18 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     }
 
     .icon-btn {
-      width: 34px;
       height: 34px;
-      border-radius: 50%;
-      border: none;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
       background: transparent;
       color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
       cursor: pointer;
       transition: background 0.15s ease, color 0.15s ease;
     }
@@ -1474,7 +343,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       border-radius: 999px;
       padding: 5px 13px;
       height: 34px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 500;
       user-select: none;
     }
@@ -1486,15 +355,18 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
     /* Circular Submit Arrow Button */
     .submit-circle {
-      width: 36px;
       height: 36px;
-      border-radius: 50%;
+      padding: 0 16px;
+      border-radius: 999px;
       border: none;
-      background: #8e8e93;
+      background: #9ca3af;
       color: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
       cursor: pointer;
       transition: background 0.15s ease, transform 0.1s ease;
     }
@@ -1512,7 +384,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .action-chip {
@@ -1556,7 +428,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     .report-card {
       width: 100%;
       max-width: 880px;
-      margin-top: 28px;
+      margin-top: 26px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -1576,7 +448,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     }
 
     .report-header h2 {
-      margin: 0 0 2px;
+      margin: 0 0 3px;
       font-size: 18px;
       font-weight: 600;
     }
@@ -1614,7 +486,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       border: 1px solid var(--lavender-border);
       border-radius: 14px;
       padding: 10px 14px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       font-size: 13px;
       color: var(--lavender-text);
     }
@@ -1638,24 +510,6 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       outline: none;
     }
 
-    .breakdown-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .breakdown-pill {
-      background: var(--bg-page);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 11px;
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
-
-    .breakdown-pill strong { color: var(--text-primary); }
-
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -1667,10 +521,10 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       background: var(--bg-page);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      padding: 5px 12px;
+      padding: 6px 13px;
       border-radius: 999px;
       font-family: inherit;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
       cursor: pointer;
     }
@@ -1686,8 +540,14 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       background: var(--bg-page);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 15px 17px;
       margin-bottom: 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    .finding.resolved {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
     }
 
     .finding-top {
@@ -1701,37 +561,53 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
     .matched-word {
       font-weight: 600;
-      color: var(--warn);
-      font-size: 14.5px;
+      color: var(--amber-text);
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      padding: 2px 9px;
+      border-radius: 7px;
+      font-size: 13.5px;
+    }
+
+    .finding.resolved .matched-word {
+      color: var(--mint-text);
+      background: var(--mint-bg);
+      border-color: var(--mint-border);
     }
 
     .cat-tag {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: var(--lavender-bg);
-      color: var(--lavender-text);
-      border: 1px solid var(--lavender-border);
-    }
-
-    .detail-line {
-      font-size: 13.5px;
-      line-height: 1.55;
-      margin: 4px 0;
-      color: var(--text-primary);
-    }
-
-    .detail-label {
-      color: var(--text-secondary);
-      font-weight: 600;
-      display: inline-block;
-      min-width: 86px;
-    }
-
-    .rewrite-text {
-      color: var(--success);
+      font-size: 11.5px;
       font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .sentence-box {
+      font-size: 13.8px;
+      line-height: 1.58;
+      color: var(--text-primary);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      margin: 8px 0;
+    }
+
+    .sentence-box mark {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 600;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .tip-line {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 6px 0 0;
     }
 
     /* Interactive Replacement Word Pills */
@@ -1739,25 +615,25 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 7px;
-      margin-top: 10px;
-      padding-top: 10px;
+      gap: 8px;
+      margin-top: 11px;
+      padding-top: 11px;
       border-top: 1px dashed var(--border);
     }
 
     .rep-label {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--text-primary);
     }
 
     .rep-word-btn {
-      background: var(--emerald-bg);
-      border: 1px solid var(--emerald-border);
-      color: var(--emerald-text);
+      background: var(--mint-bg);
+      border: 1px solid var(--mint-border);
+      color: var(--mint-text);
       border-radius: 999px;
-      padding: 4px 11px;
-      font-size: 12px;
+      padding: 5px 12px;
+      font-size: 12.5px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -1780,11 +656,11 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
     /* Inline Published Articles Drawer inside a Finding Card */
     .articles-panel {
-      margin-top: 10px;
+      margin-top: 11px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 13px 15px;
     }
 
     .articles-panel-header {
@@ -1794,21 +670,38 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 10px;
-      font-size: 12.5px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-primary);
     }
 
-    .custom-rep-form {
-      display: inline-flex;
-      gap: 6px;
+    .panel-actions {
+      display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
+
+    .swap-btn {
+      background: #059669;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .swap-btn:hover { background: #047857; }
 
     .custom-rep-input {
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 4px 8px;
+      border-radius: 8px;
+      padding: 5px 9px;
       font-size: 12px;
       font-family: inherit;
       width: 145px;
@@ -1818,7 +711,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     .custom-rep-input:focus { border-color: #8b5cf6; }
 
     .article-hit {
-      padding: 9px 11px;
+      padding: 10px 12px;
       border-radius: 10px;
       background: var(--bg-page);
       border: 1px solid var(--border);
@@ -1848,8 +741,8 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     }
 
     .article-sentence {
-      font-size: 12.8px;
-      line-height: 1.52;
+      font-size: 13px;
+      line-height: 1.55;
       color: var(--text-primary);
       background: #ffffff;
       border-left: 3px solid var(--success);
@@ -1880,7 +773,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
     .modal-card {
       width: 100%;
-      max-width: 620px;
+      max-width: 600px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -1906,7 +799,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       overflow-y: auto;
       font-size: 13.5px;
       color: var(--text-secondary);
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
     .history-item {
@@ -1933,7 +826,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
   <div class="app-shell">
     <!-- Slim Left Navigation Rail -->
     <aside class="sidebar" aria-label="Primary navigation">
-      <div class="brand-badge" title="Article Studio — AI Manuscript Audit &amp; Literature Lookup">
+      <div class="brand-badge" title="Article Studio — Friendly Writing &amp; Citation Helper">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
           <line x1="8" y1="8" x2="13" y2="8" />
@@ -1945,14 +838,14 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       </div>
 
       <nav class="rail-nav">
-        <button type="button" class="rail-item" id="navNewBtn" title="Start new audit">
+        <button type="button" class="rail-item" id="navNewBtn" title="Start fresh">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <path d="M12 5v14M5 12h14" />
           </svg>
           <span>New</span>
         </button>
 
-        <button type="button" class="rail-item" id="navHistoryBtn" title="Recent local audits">
+        <button type="button" class="rail-item" id="navHistoryBtn" title="Recent checks">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="9" />
             <polyline points="12 7 12 12 15 14" />
@@ -1960,21 +853,20 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
           <span>History</span>
         </button>
 
-        <button type="button" class="rail-item" id="navRubricBtn" title="Detection categories">
+        <button type="button" class="rail-item" id="navGuideBtn" title="How it works">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2" />
-            <polyline points="2 12 12 17 22 12" />
-            <polyline points="2 17 12 22 22 17" />
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
-          <span>Rubric</span>
+          <span>Guide</span>
         </button>
 
-        <button type="button" class="rail-item" id="navExportBtn" title="Download Markdown report">
+        <button type="button" class="rail-item" id="navExportBtn" title="Download report">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-            <path d="M17.5 14v7M14.5 18l3 3 3-3" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           <span>Export</span>
         </button>
@@ -1988,17 +880,20 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
           <span class="workspace-tag">Article Studio</span>
         </div>
         <div class="topbar-right">
-          <span class="api-badge" title="Detects AI words offline &amp; queries OpenAlex Scholarly API for human replacement examples">
+          <span class="api-badge" title="Connected to OpenAlex scholarly database — no API key needed">
             <span class="status-dot"></span>
-            <span>OpenAlex Literature API Ready</span>
+            <span>Real Article Lookup Ready</span>
           </span>
-          <button type="button" class="btn-light-pill" id="topSampleBtn">Load Sample Draft</button>
+          <button type="button" class="btn-light-pill" id="topSampleBtn">Try Example Text</button>
         </div>
       </header>
 
       <main class="main-content" id="mainContainer">
         <section class="hero-section">
-          <h1 class="hero-title">What manuscript can I audit?</h1>
+          <h1 class="hero-title">Let's make your writing sound natural.</h1>
+          <p class="hero-subtitle">
+            Paste your manuscript or upload a file. We'll spot robotic AI phrasing, let you swap words in one click, and show how published authors write them.
+          </p>
 
           <div class="prompt-card">
             <div id="attachmentBar" class="attachment-bar hidden">
@@ -2010,12 +905,13 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
                 <span id="fileMeta">manuscript.docx</span>
                 <button type="button" id="removeFileBtn" class="chip-close" title="Remove file">&times;</button>
               </div>
+              <button type="button" id="undoBtn" class="btn-light-pill hidden" style="padding:4px 10px;font-size:12px;">Undo Last Swap</button>
             </div>
 
             <textarea
               id="manuscriptText"
               class="prompt-textarea"
-              placeholder="Paste your manuscript draft or attach a .docx, .pdf, .md, .txt, .html file..."
+              placeholder="Paste your draft here, or attach a .docx, .pdf, .md, or .txt file..."
               rows="5"
             ></textarea>
 
@@ -2023,33 +919,43 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
             <div class="prompt-toolbar">
               <div class="toolbar-left">
-                <button type="button" class="icon-btn" id="attachBtn" title="Attach local manuscript (.docx, .pdf, .md, .txt, .html)">
-                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="icon-btn" id="attachBtn" title="Upload .docx, .pdf, .md, or .txt">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                   </svg>
+                  <span>Upload File</span>
                 </button>
 
-                <button type="button" class="icon-btn" id="clearBtn" title="Clear draft">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="icon-btn" id="copyDraftBtn" title="Copy current draft text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  <span>Copy Text</span>
+                </button>
+
+                <button type="button" class="icon-btn" id="clearBtn" title="Clear text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                    <path d="M10 11v6M14 11v6" />
                   </svg>
+                  <span>Clear</span>
                 </button>
               </div>
 
               <div class="toolbar-right">
-                <div class="magic-pill" title="Audits locally &amp; finds published replacement examples via OpenAlex API">
+                <div class="magic-pill">
                   <svg class="sparkle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z" />
                   </svg>
-                  <span>Audit + Article API</span>
+                  <span>Instant Check + Real Papers</span>
                 </div>
 
-                <button type="button" class="submit-circle" id="analyzeBtn" title="Run AI Style Audit">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="19" x2="12" y2="5" />
-                    <polyline points="5 12 12 5 19 12" />
+                <button type="button" class="submit-circle" id="analyzeBtn" title="Check Manuscript">
+                  <span>Check Writing</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
                   </svg>
                 </button>
               </div>
@@ -2057,82 +963,49 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
           </div>
 
           <div class="quick-chips">
-            <button type="button" class="action-chip" data-action="audit">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <span>Full Audit</span>
+            <button type="button" class="action-chip" data-action="All">
+              <span>Check Everything</span>
             </button>
-
-            <button type="button" class="action-chip" data-action="buzzwords">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-              </svg>
-              <span>Buzzwords</span>
+            <button type="button" class="action-chip" data-action="Robotic Buzzwords">
+              <span>Robotic Buzzwords</span>
             </button>
-
-            <button type="button" class="action-chip" data-action="transitions">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-              </svg>
-              <span>Transitions</span>
+            <button type="button" class="action-chip" data-action="Wordy Openers & Fillers">
+              <span>Wordy Openers</span>
             </button>
-
-            <button type="button" class="action-chip" data-action="passive">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <span>Passive Agency</span>
-            </button>
-
-            <button type="button" class="action-chip" data-action="sample">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              <span>Sample Text</span>
+            <button type="button" class="action-chip" data-action="Passive / Non-Human Phrasing">
+              <span>Passive Phrasing</span>
             </button>
           </div>
 
           <div id="statusMsg" class="status"></div>
         </section>
 
-        <!-- Audit Report Card -->
+        <!-- Friendly Results Card -->
         <section id="reportSection" class="report-card hidden">
           <div class="report-header">
             <div>
-              <h2>Forensic Audit &amp; Literature Replacement Report</h2>
+              <h2>Your Writing Suggestions</h2>
               <p id="reportStats" class="muted-text"></p>
             </div>
             <div class="export-group">
-              <div id="scoreBadge" class="score-badge">Score: --/100</div>
-              <button type="button" class="btn-light-pill" id="downloadMdBtn">Export .MD</button>
-              <button type="button" class="btn-light-pill" id="downloadJsonBtn">Export .JSON</button>
+              <div id="scoreBadge" class="score-badge">Natural Style: --%</div>
+              <button type="button" class="btn-light-pill" id="downloadCleanTxtBtn">Save Edited .TXT</button>
+              <button type="button" class="btn-light-pill" id="downloadMdBtn">Save Report .MD</button>
             </div>
           </div>
 
-          <!-- Detected Manuscript Domain Filter for OpenAlex Article Searches -->
+          <!-- Topic Scope for OpenAlex Article Examples -->
           <div class="topic-bar">
-            <span><strong>Article Search Domain:</strong> Match published replacement examples to your topic</span>
+            <span><strong>Article Examples Topic:</strong> Showing published sentences related to</span>
             <div class="topic-controls">
               <input type="text" id="topicContextInput" class="topic-input" placeholder="e.g. thyroid machine learning" />
-              <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;">
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer;">
                 <input type="checkbox" id="useTopicCheck" checked />
-                <span>Scope to my topic</span>
+                <span>Match my topic</span>
               </label>
             </div>
           </div>
 
-          <div id="breakdownBox" class="breakdown-grid"></div>
           <div id="filterBar" class="filters"></div>
           <div id="findingsList"></div>
         </section>
@@ -2140,11 +1013,11 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     </div>
   </div>
 
-  <!-- History & Rubric Modal -->
+  <!-- History & Guide Modal -->
   <div id="infoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div class="modal-head">
-        <h3 id="infoModalTitle">Audit History</h3>
+        <h3 id="infoModalTitle">History</h3>
         <button type="button" class="chip-close" id="closeInfoModalBtn">&times;</button>
       </div>
       <div id="infoModalBody" class="modal-body"></div>
@@ -2153,129 +1026,85 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
   <script>
     // -----------------------------------------------------------------------
-    // 1. AI BUZZWORDS & LEXICON WITH STRUCTURED REPLACEMENT WORDS
+    // 1. FRIENDLY WORD & PHRASE PATTERNS
+    //    Format: [regexPattern, friendlyTip, [replacementOptions]]
     // -----------------------------------------------------------------------
-    const INFLATED_VERBS = [
-      ["\\bdelv(?:e|es|ed|ing)\\b", "Replace with: examine, investigate, or explore.", ["examine", "investigate", "explore"]],
-      ["\\bunderscor(?:e|es|ed|ing)\\b", "Replace with: emphasize, demonstrate, or highlight.", ["emphasize", "demonstrate", "highlight"]],
-      ["\\bleverag(?:e|es|ed|ing)\\b", "Replace with: use, apply, or employ.", ["use", "apply", "employ"]],
-      ["\\bfoster(?:s|ed|ing)?\\b", "Replace with: encourage, support, or promote.", ["encourage", "support", "promote"]],
-      ["\\bspearhead(?:s|ed|ing)?\\b", "Replace with: lead, direct, or initiate.", ["lead", "direct", "initiate"]],
-      ["\\bstreamlin(?:e|es|ed|ing)\\b", "Replace with: simplify, accelerate, or refine.", ["simplify", "accelerate", "refine"]],
-      ["\\bbolster(?:s|ed|ing)?\\b", "Replace with: strengthen, support, or reinforce.", ["strengthen", "support", "reinforce"]],
-      ["\\belevat(?:e|es|ed|ing)\\b", "Replace with: improve, increase, or raise.", ["improve", "increase", "raise"]],
-      ["\\bharness(?:es|ed|ing)?\\b", "Replace with: use, capture, or apply.", ["use", "capture", "apply"]],
-      ["\\bnavigat(?:e|es|ed|ing)\\b", "Replace with: manage, address, or handle.", ["manage", "address", "handle"]],
-      ["\\bunlock(?:s|ed|ing)?\\b", "Replace with: enable, reveal, or identify.", ["enable", "reveal", "identify"]],
-      ["\\brevolutioniz(?:e|es|ed|ing)\\b", "Replace with: reshape, alter, or advance.", ["reshape", "alter", "advance"]],
-      ["\\bcatalyz(?:e|es|ed|ing)\\b", "Replace with: trigger, accelerate, or stimulate.", ["trigger", "accelerate", "stimulate"]],
-      ["\\boptimiz(?:e|es|ed|ing)\\b", "Replace with: improve, refine, or calibrate.", ["improve", "refine", "calibrate"]],
-      ["\\bfacilitat(?:e|es|ed|ing)\\b", "Replace with: enable, assist, or allow.", ["enable", "assist", "allow"]],
-      ["\\bempower(?:s|ed|ing)?\\b", "Replace with: enable, allow, or permit.", ["enable", "allow", "permit"]],
-      ["\\baugmen(?:t|ts|ted|ting)\\b", "Replace with: supplement, expand, or increase.", ["supplement", "expand", "increase"]],
-      ["\\belucidat(?:e|es|ed|ing)\\b", "Replace with: clarify, explain, or determine.", ["clarify", "explain", "determine"]],
-      ["\\bexemplif(?:y|ies|ied|ying)\\b", "Replace with: illustrate, represent, or confirm.", ["illustrate", "represent", "confirm"]]
+    const BUZZWORD_PATTERNS = [
+      ["\\bdelv(?:e|es|ed|ing)\\b", "A common AI filler verb—use a direct research verb instead.", ["examine", "investigate", "explore"]],
+      ["\\bunderscor(?:e|es|ed|ing)\\b", "Sounds overly dramatic—try a clearer verb.", ["highlight", "show", "emphasize"]],
+      ["\\bleverag(?:e|es|ed|ing)\\b", "Corporate buzzword—plain verbs read much better.", ["use", "apply", "employ"]],
+      ["\\bfoster(?:s|ed|ing)?\\b", "Often overused by AI—choose a more concrete verb.", ["support", "encourage", "promote"]],
+      ["\\bspearhead(?:s|ed|ing)?\\b", "Inflated action verb—use a simpler alternative.", ["lead", "direct", "initiate"]],
+      ["\\bstreamlin(?:e|es|ed|ing)\\b", "Buzzword—describe what actually became faster or simpler.", ["simplify", "speed up", "refine"]],
+      ["\\bbolster(?:s|ed|ing)?\\b", "Overused qualifier—try a straightforward verb.", ["strengthen", "support", "confirm"]],
+      ["\\belevat(?:e|es|ed|ing)\\b", "Inflated verb—use a direct word.", ["improve", "increase", "raise"]],
+      ["\\bharness(?:es|ed|ing)?\\b", "Metaphorical buzzword—prefer plain phrasing.", ["use", "capture", "apply"]],
+      ["\\bnavigat(?:e|es|ed|ing)\\b", "Overused metaphor—say what was actually done.", ["manage", "address", "handle"]],
+      ["\\bunlock(?:s|ed|ing)?\\b", "Promotional wording—use a clear scientific verb.", ["reveal", "enable", "identify"]],
+      ["\\brevolutioniz(?:e|es|ed|ing)\\b", "Exaggerated claim—be specific about the change.", ["reshape", "change", "advance"]],
+      ["\\boptimiz(?:e|es|ed|ing)\\b", "Often vague—specify how it was improved.", ["improve", "refine", "tune"]],
+      ["\\bfacilitat(?:e|es|ed|ing)\\b", "Wordy verb—prefer a direct alternative.", ["enable", "help", "allow"]],
+      ["\\bempower(?:s|ed|ing)?\\b", "Marketing tone—use a neutral verb.", ["enable", "allow", "help"]],
+      ["\\belucidat(?:e|es|ed|ing)\\b", "Overly academic—plain verbs are easier to read.", ["clarify", "explain", "determine"]],
+      ["\\bpivotal\\b", "Heavily favored by AI—try a grounded adjective.", ["key", "central", "critical"]],
+      ["\\btransformative\\b", "Sounds promotional—use a measured description.", ["major", "substantial", "notable"]],
+      ["\\bseamless\\b", "Marketing buzzword—describe how it actually works.", ["smooth", "continuous", "direct"]],
+      ["\\brobust\\b", "One of the top AI adjectives—be more specific.", ["reliable", "consistent", "strong"]],
+      ["\\bintricate\\b", "Often unnecessary—use a simpler word.", ["complex", "detailed", "structured"]],
+      ["\\bmultifaceted\\b", "AI favorite—describe the actual parts instead.", ["varied", "complex", "diverse"]],
+      ["\\bcomprehensive\\b", "Often padded—say what was covered.", ["complete", "thorough", "full"]],
+      ["\\bgroundbreaking\\b", "Overstated praise—let your results speak.", ["novel", "new", "original"]],
+      ["\\bholistic\\b", "Vague buzzword—prefer concrete terms.", ["broad", "complete", "integrated"]],
+      ["\\bparamount\\b", "Overly formal—use a natural word.", ["essential", "primary", "top"]],
+      ["\\bnuanced\\b", "Overused AI filler—specify what is subtle.", ["subtle", "detailed", "specific"]],
+      ["\\bcutting[- ]edge\\b", "Cliché—state when or how it was developed.", ["recent", "modern", "current"]],
+      ["\\bstate[- ]of[- ]the[- ]art\\b", "Cliché—name the benchmark instead.", ["current", "leading", "standard"]],
+      ["\\bunprecedented\\b", "Rarely accurate—use a measured word.", ["rare", "novel", "unmatched"]],
+      ["\\bmeticulous(?:ly)?\\b", "AI filler—show the careful method instead.", ["careful", "carefully", "systematic"]],
+      ["\\bseamlessly\\b", "Marketing adverb—cut or simplify.", ["smoothly", "directly", "easily"]],
+      ["\\bprofoundly\\b", "Overly dramatic adverb.", ["strongly", "deeply", "markedly"]],
+      ["\\btapestr(?:y|ies)\\b", "Classic AI metaphor—use a plain noun.", ["mix", "pattern", "collection"]],
+      ["\\btestament\\b", "Cliché phrasing—use a direct noun.", ["evidence", "proof", "sign"]],
+      ["\\blandscapes?\\b", "Overused metaphor for a research field.", ["field", "area", "literature"]],
+      ["\\bparadigms?\\b", "Heavy jargon—use a clearer noun.", ["model", "approach", "method"]],
+      ["\\bsynerg(?:y|ies)\\b", "Corporate buzzword.", ["interaction", "cooperation", "combined effect"]],
+      ["\\brealms?\\b", "Overly poetic for academic or clear writing.", ["area", "field", "domain"]],
+      ["\\binterplay\\b", "AI favorite—use a concrete relationship word.", ["interaction", "relationship", "link"]],
+      ["\\becosystems?\\b", "Buzzword when not talking about biology.", ["network", "system", "environment"]],
+      ["\\bplethora\\b", "Wordy—just say 'many' or give the exact count.", ["variety", "range", "many"]],
+      ["\\bmyriad\\b", "Overly dramatic—use a simpler word.", ["many", "numerous", "multiple"]]
     ];
 
-    const INFLATED_ADJECTIVES = [
-      ["\\bpivotal\\b", "Replace with: central, critical, or primary.", ["central", "critical", "primary"]],
-      ["\\btransformative\\b", "Replace with: substantial, notable, or significant.", ["substantial", "notable", "significant"]],
-      ["\\bseamless\\b", "Replace with: continuous, integrated, or direct.", ["continuous", "integrated", "direct"]],
-      ["\\brobust\\b", "Replace with: reliable, consistent, or rigorous.", ["reliable", "consistent", "rigorous"]],
-      ["\\bintricate\\b", "Replace with: complex, detailed, or structured.", ["complex", "detailed", "structured"]],
-      ["\\bmultifaceted\\b", "Replace with: complex, diverse, or heterogeneous.", ["complex", "diverse", "heterogeneous"]],
-      ["\\bcomprehensive\\b", "Replace with: thorough, extensive, or complete.", ["thorough", "extensive", "complete"]],
-      ["\\bgroundbreaking\\b", "Replace with: novel, original, or initial.", ["novel", "original", "initial"]],
-      ["\\bholistic\\b", "Replace with: integrated, broad, or systemic.", ["integrated", "broad", "systemic"]],
-      ["\\bparamount\\b", "Replace with: primary, essential, or principal.", ["primary", "essential", "principal"]],
-      ["\\bnuanced\\b", "Replace with: subtle, specific, or detailed.", ["subtle", "specific", "detailed"]],
-      ["\\bcutting[- ]edge\\b", "Replace with: recent, current, or contemporary.", ["recent", "current", "contemporary"]],
-      ["\\bstate[- ]of[- ]the[- ]art\\b", "Replace with: benchmark, current, or standard.", ["benchmark", "current", "standard"]],
-      ["\\bdynamic\\b", "Replace with: variable, temporal, or changing.", ["variable", "temporal", "changing"]],
-      ["\\bunprecedented\\b", "Replace with: novel, rare, or notable.", ["novel", "rare", "notable"]],
-      ["\\bindispensable\\b", "Replace with: essential, necessary, or required.", ["essential", "necessary", "required"]],
-      ["\\bmeticulous\\b", "Replace with: careful, systematic, or rigorous.", ["careful", "systematic", "rigorous"]],
-      ["\\bubiquitous\\b", "Replace with: widespread, common, or prevalent.", ["widespread", "common", "prevalent"]]
+    const OPENER_AND_FILLER_PATTERNS = [
+      ["^\\s*Furthermore\\b[,]?", "AI chains 'Furthermore' often—try a lighter transition or start directly.", ["Also,", "In addition,"]],
+      ["^\\s*Moreover\\b[,]?", "Heavy transition—often reads smoother without it.", ["In addition,", "Similarly,"]],
+      ["^\\s*Additionally\\b[,]?", "Repetitive opener—try 'Also' or merge with the previous point.", ["Also,", "In addition,"]],
+      ["^\\s*Consequently\\b[,]?", "Formal transition—try a simpler cause-and-effect link.", ["As a result,", "Therefore,"]],
+      ["^\\s*Notably\\b[,]?", "Let the finding itself show why it matters.", ["Specifically,", "In particular,"]],
+      ["^\\s*Ultimately\\b[,]?", "Often filler—try a direct closing word.", ["Overall,", "Finally,"]],
+      ["^\\s*Essentially\\b[,]?", "Throat-clearing opener—state the point directly.", ["Specifically,", "In practice,"]],
+      ["^\\s*Conversely\\b[,]?", "Heavy transition—try a simpler contrast.", ["In contrast,", "However,"]],
+      ["^\\s*Interestingly\\b[,]?", "Avoid telling the reader what is interesting—just share the fact.", ["Specifically,", "Notably,"]],
+      ["^\\s*Firstly\\b[,]?", "Use 'First,' instead of 'Firstly,'.", ["First,"]],
+      ["^\\s*Secondly\\b[,]?", "Use 'Second,' instead of 'Secondly,'.", ["Second,"]],
+      ["^\\s*Thirdly\\b[,]?", "Use 'Third,' instead of 'Thirdly,'.", ["Third,"]],
+      ["^\\s*Lastly\\b[,]?", "Use 'Finally,' for cleaner flow.", ["Finally,"]],
+      ["^\\s*In summary\\b[,]?", "You can usually cut this signpost and state your takeaway directly.", ["Overall,", "Taken together,"]],
+      ["^\\s*In conclusion\\b[,]?", "Cut the mechanical signpost and state your conclusion plainly.", ["Overall,", "Taken together,"]],
+      ["\\bit is important to note that\\b", "Empty filler phrase—start straight with the subject.", ["Notably,", "Specifically,"]],
+      ["\\bit is worth noting that\\b", "Wordy opener—state the observation directly.", ["Specifically,", "In particular,"]],
+      ["\\bit should be noted that\\b", "Passive filler—cut and state the point directly.", ["Specifically,", "Here,"]],
+      ["\\bin today'?s (?:fast[- ]paced |rapidly evolving |modern )?(?:digital )?(?:landscape|world|era)\\b", "Classic AI cliché—replace with a real timeframe or context.", ["currently", "recently"]],
+      ["\\bwhen it comes to\\b", "Conversational filler—use a crisp preposition.", ["regarding", "for"]],
+      ["\\ba testament to\\b", "Cliché—use a direct phrase.", ["evidence of", "proof of"]],
+      ["\\bplays? a (?:crucial|pivotal|vital|key|critical) role in\\b", "Wordy—replace with a single active verb.", ["shapes", "drives", "influences"]],
+      ["\\bpave(?:s|d|ing)? the way for\\b", "Cliché metaphor—use a direct verb.", ["enable", "support"]],
+      ["\\bbridge(?:s|d|ing)? the gap between\\b", "Cliché metaphor—say how they connect.", ["connect", "link"]],
+      ["\\bdelve(?:s|d|ing)? into\\b", "Top AI cliché—use a clear verb.", ["examine", "explore", "analyze"]],
+      ["\\bshed(?:s|ding)? light on\\b", "Cliché metaphor—use a direct verb.", ["clarify", "explain", "reveal"]]
     ];
 
-    const INFLATED_NOUNS = [
-      ["\\btapestr(?:y|ies)\\b", "Replace with: pattern, diversity, or spectrum.", ["pattern", "diversity", "spectrum"]],
-      ["\\btestament\\b", "Replace with: evidence, indication, or confirmation.", ["evidence", "indication", "confirmation"]],
-      ["\\blandscapes?\\b", "Replace with: literature, field, or setting.", ["literature", "field", "setting"]],
-      ["\\bparadigms?\\b", "Replace with: model, approach, or method.", ["model", "approach", "method"]],
-      ["\\bsynerg(?:y|ies)\\b", "Replace with: interaction, cooperation, or combination.", ["interaction", "cooperation", "combination"]],
-      ["\\brealms?\\b", "Replace with: domain, field, or area.", ["domain", "field", "area"]],
-      ["\\bcornerstones?\\b", "Replace with: foundation, basis, or core.", ["foundation", "basis", "core"]],
-      ["\\bcatalysts?\\b", "Replace with: driver, trigger, or factor.", ["driver", "trigger", "factor"]],
-      ["\\bmosaics?\\b", "Replace with: combination, pattern, or mixture.", ["combination", "pattern", "mixture"]],
-      ["\\binterplay\\b", "Replace with: interaction, relationship, or association.", ["interaction", "relationship", "association"]],
-      ["\\becosystems?\\b", "Replace with: network, environment, or infrastructure.", ["network", "environment", "infrastructure"]],
-      ["\\btrajector(?:y|ies)\\b", "Replace with: progression, trend, or course.", ["progression", "trend", "course"]],
-      ["\\bplethora\\b", "Replace with: variety, range, or number.", ["variety", "range", "number"]],
-      ["\\bmyriad\\b", "Replace with: numerous, multiple, or diverse.", ["numerous", "multiple", "diverse"]]
-    ];
-
-    const INFLATED_ADVERBS = [
-      ["\\bmeticulously\\b", "Replace with: carefully, systematically, or rigorously.", ["carefully", "systematically", "rigorously"]],
-      ["\\bseamlessly\\b", "Replace with: directly, readily, or smoothly.", ["directly", "readily", "smoothly"]],
-      ["\\bprofoundly\\b", "Replace with: strongly, markedly, or substantially.", ["strongly", "markedly", "substantially"]],
-      ["\\binherently\\b", "Replace with: intrinsically, naturally, or structurally.", ["intrinsically", "naturally", "structurally"]],
-      ["\\bundeniably\\b", "Replace with: clearly, evidently, or demonstrably.", ["clearly", "evidently", "demonstrably"]],
-      ["\\bfundamentally\\b", "Replace with: primarily, largely, or basically.", ["primarily", "largely", "basically"]],
-      ["\\bexponentially\\b", "Replace with: rapidly, sharply, or markedly.", ["rapidly", "sharply", "markedly"]],
-      ["\\bsignificantly\\b", "Replace with: markedly, notably, or statistically.", ["markedly", "notably", "statistically"]],
-      ["\\bsubstantially\\b", "Replace with: considerably, largely, or markedly.", ["considerably", "largely", "markedly"]]
-    ];
-
-    // -----------------------------------------------------------------------
-    // 2. FORMULAIC TRANSITIONS, LIST SIGNPOSTS & FILLER PHRASES
-    // -----------------------------------------------------------------------
-    const SENTENCE_INITIAL_ADVERBS = [
-      ["^\\s*Furthermore\\b[,]?", "Replace with: In addition, Also, or direct subject.", ["In addition", "Also"]],
-      ["^\\s*Moreover\\b[,]?", "Replace with: In addition, Similarly, or direct claim.", ["In addition", "Similarly"]],
-      ["^\\s*Additionally\\b[,]?", "Replace with: Also or In addition.", ["Also", "In addition"]],
-      ["^\\s*Consequently\\b[,]?", "Replace with: As a result or Therefore.", ["As a result", "Therefore"]],
-      ["^\\s*Notably\\b[,]?", "Replace with: Specifically or In particular.", ["Specifically", "In particular"]],
-      ["^\\s*Ultimately\\b[,]?", "Replace with: Overall or Finally.", ["Overall", "Finally"]],
-      ["^\\s*Essentially\\b[,]?", "Replace with: Specifically or In practice.", ["Specifically", "In practice"]],
-      ["^\\s*Conversely\\b[,]?", "Replace with: In contrast or However.", ["In contrast", "However"]],
-      ["^\\s*Interestingly\\b[,]?", "Cut subjective adverb; present the observation directly.", ["Specifically", "Notably"]],
-      ["^\\s*Nonetheless\\b[,]?", "Replace with: However or Despite this.", ["However", "Despite this"]],
-      ["^\\s*Nevertheless\\b[,]?", "Replace with: However or Yet.", ["However", "Yet"]]
-    ];
-
-    const RIGID_LIST_SIGNPOSTS = [
-      ["^\\s*Firstly\\b[,]?", "Replace with: First, or integrate naturally.", ["First"]],
-      ["^\\s*Secondly\\b[,]?", "Replace with: Second, or link via topic.", ["Second"]],
-      ["^\\s*Thirdly\\b[,]?", "Replace with: Third, or link via topic.", ["Third"]],
-      ["^\\s*Lastly\\b[,]?", "Replace with: Finally, or state the final point.", ["Finally"]],
-      ["^\\s*On (?:the )?one hand\\b[,]?", "State the first finding directly without stock framing.", ["Whereas", "While"]],
-      ["^\\s*On the other hand\\b[,]?", "Replace with: In contrast or However.", ["In contrast", "However"]],
-      ["^\\s*In summary\\b[,]?", "Cut signpost and deliver the synthesis directly.", ["Overall", "Taken together"]],
-      ["^\\s*In conclusion\\b[,]?", "Cut signpost and state the takeaway directly.", ["Overall", "Taken together"]],
-      ["^\\s*To conclude\\b[,]?", "Cut signpost and state the conclusion directly.", ["Overall", "Taken together"]],
-      ["\\bKey takeaways include\\s*:?", "Introduce the specific findings directly.", ["Findings indicate", "Results show"]]
-    ];
-
-    const FILLER_PHRASES = [
-      ["\\bit is important to note that\\b", "Delete filler; start with the actual subject.", ["Notably", "Specifically"]],
-      ["\\bit is worth noting that\\b", "Delete filler; state the observation directly.", ["Specifically", "In particular"]],
-      ["\\bit should be noted that\\b", "Delete filler; state the point directly.", ["Specifically", "Here"]],
-      ["\\bin today'?s (?:fast[- ]paced |rapidly evolving |modern )?(?:digital )?(?:landscape|world|era)\\b", "Replace generic opener with a concrete timeframe or clinical context.", ["In current practice", "Recently"]],
-      ["\\bwhen it comes to\\b", "Replace with: regarding, concerning, or for.", ["regarding", "concerning"]],
-      ["\\ba testament to\\b", "Replace with: evidence of or consistent with.", ["evidence of", "consistent with"]],
-      ["\\bplays? a (?:crucial|pivotal|vital|key|critical) role in\\b", "Replace with an active verb: regulates, mediates, or influences.", ["regulates", "mediates", "influences"]],
-      ["\\bin the realm of\\b", "Replace with: within or across.", ["within", "across"]],
-      ["\\bpave(?:s|d|ing)? the way for\\b", "Replace with: enable, support, or lead to.", ["enable", "support"]],
-      ["\\bbridge(?:s|d|ing)? the gap between\\b", "Replace with: connect or integrate.", ["connect", "integrate"]],
-      ["\\bdelve(?:s|d|ing)? into\\b", "Replace with: examine, investigate, or evaluate.", ["examine", "investigate", "evaluate"]],
-      ["\\bshed(?:s|ding)? light on\\b", "Replace with: clarify, characterize, or reveal.", ["clarify", "characterize", "reveal"]]
-    ];
-
-    // -----------------------------------------------------------------------
-    // 3. DISEMBODIED / AUTOMATED PHRASING & PASSIVE AGENCY
-    // -----------------------------------------------------------------------
-    const ABSTRACT_SUBJECT_PATTERN =
+    const ABSTRACT_AGENCY_REGEX =
       "\\b(?:the|this|these|our|modern|advanced|current|proposed)?\\s*" +
       "(?:platform|system|systems|algorithm|algorithms|model|models|framework|frameworks|" +
       "software|solution|solutions|technology|technologies|tool|tools|data|datasets|" +
@@ -2286,7 +1115,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       "harnesses?|fosters?|elevates?|spearheads?|streamlines?|optimizes?|catalyzes?|" +
       "ensures?|delivers?|provides?)\\b";
 
-    const PASSIVE_VOICE_PATTERN =
+    const PASSIVE_VOICE_REGEX =
       "\\b(?:is|are|was|were|be|been|being)\\s+" +
       "(?:[a-z]+ly\\s+)?" +
       "(" +
@@ -2295,7 +1124,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       "drawn|driven|chosen|written|broken|spoken|proven|undertaken|overcome" +
       ")\\b";
 
-    const PASSIVE_FALSE_POSITIVES = new Set([
+    const PASSIVE_IGNORE = new Set([
       "interested", "tired", "pleased", "excited", "worried", "concerned",
       "satisfied", "disappointed", "surprised", "bored", "confused", "crowded",
       "married", "divorced", "located", "situated", "related", "associated",
@@ -2304,26 +1133,29 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     ]);
 
     const TOPIC_STOPWORDS = new Set([
-      "about","above","across","after","against","along","also","among","analysis","approach",
-      "around","based","because","before","being","between","both","could","current","data",
-      "different","during","each","early","either","even","every","evidence","example","existing",
-      "findings","first","following","from","furthermore","have","here","high","however","important",
-      "including","into","its","large","later","less","like","literature","many","methods","model",
-      "models","more","moreover","most","must","need","neither","next","none","notably","number",
-      "often","only","other","others","over","paper","part","present","prior","provided","recent",
-      "results","review","same","several","should","show","shown","since","some","specific","studies",
-      "study","such","system","systems","than","that","their","them","then","there","these","they",
-      "this","those","through","thus","today","together","under","until","upon","used","using",
-      "various","very","well","were","what","when","where","whether","which","while","with","within",
-      "without","work","would","years"
+      "about", "above", "across", "after", "against", "along", "also", "among", "analysis",
+      "approach", "around", "based", "because", "before", "being", "between", "both", "could",
+      "current", "data", "different", "during", "each", "early", "either", "even", "every",
+      "evidence", "example", "existing", "findings", "first", "following", "from", "furthermore",
+      "have", "here", "high", "however", "important", "including", "into", "its", "large",
+      "later", "less", "like", "literature", "many", "methods", "model", "models", "more",
+      "moreover", "most", "must", "need", "neither", "next", "none", "notably", "number",
+      "often", "only", "other", "others", "over", "paper", "part", "present", "prior",
+      "provided", "recent", "results", "review", "same", "several", "should", "show", "shown",
+      "since", "some", "specific", "studies", "study", "such", "system", "systems", "than",
+      "that", "their", "them", "then", "there", "these", "they", "this", "those", "through",
+      "thus", "today", "together", "under", "until", "upon", "used", "using", "various",
+      "very", "well", "were", "what", "when", "where", "whether", "which", "while", "with",
+      "within", "without", "work", "would", "years"
     ]);
 
-    const SAMPLE_ARTICLE = `In today's fast-paced digital landscape, organizations must seamlessly leverage cutting-edge analytics to unlock transformative growth. Furthermore, it is important to note that modern software ecosystems play a crucial role in fostering synergy across multifaceted teams. Firstly, the platform empowers stakeholders to delve into intricate datasets without manual intervention. Moreover, actionable insights are meticulously generated by the algorithm to bolster decision-making. Ultimately, this robust paradigm serves as a testament to how automation elevates operational efficiency across the entire enterprise.`;
+    const SAMPLE_DRAFT = `In today's fast-paced digital landscape, organizations must seamlessly leverage cutting-edge analytics to unlock transformative growth. Furthermore, it is important to note that modern software ecosystems play a crucial role in fostering synergy across multifaceted teams. Firstly, the platform empowers stakeholders to delve into intricate datasets without manual intervention. Moreover, actionable insights are meticulously generated by the algorithm to bolster decision-making. Ultimately, this robust paradigm serves as a testament to how automation elevates operational efficiency across the entire enterprise.`;
 
-    // UI Elements
+    // UI References
     const fileInput = document.getElementById("fileInput");
     const attachmentBar = document.getElementById("attachmentBar");
     const fileMeta = document.getElementById("fileMeta");
+    const undoBtn = document.getElementById("undoBtn");
     const manuscriptText = document.getElementById("manuscriptText");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const statusMsg = document.getElementById("statusMsg");
@@ -2332,7 +1164,6 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     const scoreBadge = document.getElementById("scoreBadge");
     const topicContextInput = document.getElementById("topicContextInput");
     const useTopicCheck = document.getElementById("useTopicCheck");
-    const breakdownBox = document.getElementById("breakdownBox");
     const filterBar = document.getElementById("filterBar");
     const findingsList = document.getElementById("findingsList");
     const heroSection = document.querySelector(".hero-section");
@@ -2344,13 +1175,8 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     let currentReport = null;
     let currentFileName = "manuscript";
     let activeCategory = "All";
+    const undoStack = [];
     const articleCache = new Map();
-
-    const CATEGORY_GROUPS = {
-      buzzwords: ["Inflated Verb", "Inflated Adjective", "Inflated Noun", "Inflated Adverb"],
-      transitions: ["Sentence-Initial Adverb", "Rigid List Signpost", "Filler Phrase"],
-      passive: ["Disembodied / Automated Phrasing", "Passive Construction"]
-    };
 
     function syncSubmitState() {
       analyzeBtn.classList.toggle("active", manuscriptText.value.trim().length > 0);
@@ -2373,7 +1199,6 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         .replace(/'/g, "&#039;");
     }
 
-    // Extract top domain keywords from opening of manuscript for OpenAlex scoping
     function extractTopicKeywords(text) {
       const head = text.slice(0, 2500).toLowerCase();
       const tokens = head.match(/\b[a-z]{4,18}\b/g) || [];
@@ -2389,7 +1214,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         .join(" ");
     }
 
-    // File Attachment & Parsing (.docx, .pdf, .md, .txt, .html)
+    // File Upload (.docx, .pdf, .md, .txt, .html)
     document.getElementById("attachBtn").addEventListener("click", () => fileInput.click());
 
     document.getElementById("removeFileBtn").addEventListener("click", () => {
@@ -2404,7 +1229,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
       currentFileName = file.name.replace(/\.[^/.]+$/, "");
       const ext = file.name.split(".").pop().toLowerCase();
-      setStatus(`Reading "${file.name}"...`);
+      setStatus(`Opening "${file.name}"...`);
 
       try {
         let extractedText = "";
@@ -2417,14 +1242,14 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
           doc.querySelectorAll("script, style, nav, footer, header, aside").forEach(el => el.remove());
           extractedText = doc.body?.innerText || "";
         } else if (ext === "docx") {
-          if (!window.mammoth) throw new Error("DOCX parser library failed to load.");
+          if (!window.mammoth) throw new Error("DOCX reader is still loading—please try again in a second.");
           const arrayBuffer = await file.arrayBuffer();
           const result = await window.mammoth.extractRawText({ arrayBuffer });
           extractedText = result.value;
         } else if (ext === "pdf") {
-          if (!window.pdfjsLib) throw new Error("PDF parser library failed to load.");
+          if (!window.pdfjsLib) throw new Error("PDF reader is still loading—please try again in a second.");
           window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-            "[https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js](https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js)";
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
           const arrayBuffer = await file.arrayBuffer();
           const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
           const pages = [];
@@ -2435,7 +1260,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
           }
           extractedText = pages.join("\n\n");
         } else {
-          throw new Error(`Unsupported format ".${ext}".`);
+          throw new Error(`Unsupported file type ".${ext}".`);
         }
 
         manuscriptText.value = extractedText.trim();
@@ -2443,19 +1268,19 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         fileMeta.textContent = `${file.name} (${words.toLocaleString()} words)`;
         attachmentBar.classList.remove("hidden");
         syncSubmitState();
-        setStatus("Manuscript loaded. Click the arrow button to audit and find replacement articles.");
+        setStatus("File ready! Click 'Check Writing' to review your text.");
       } catch (err) {
-        setStatus(`Could not read file: ${err.message}`, true);
+        setStatus(`Could not open file: ${err.message}`, true);
       }
     });
 
     function loadSampleText() {
-      currentFileName = "sample_manuscript";
-      manuscriptText.value = SAMPLE_ARTICLE;
-      fileMeta.textContent = "sample_manuscript.txt (83 words)";
+      currentFileName = "sample_draft";
+      manuscriptText.value = SAMPLE_DRAFT;
+      fileMeta.textContent = "sample_draft.txt (83 words)";
       attachmentBar.classList.remove("hidden");
       syncSubmitState();
-      setStatus("Sample draft loaded.");
+      runCheck("All");
     }
 
     function resetWorkspace() {
@@ -2463,6 +1288,8 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       fileInput.value = "";
       currentFileName = "manuscript";
       currentReport = null;
+      undoStack.length = 0;
+      undoBtn.classList.add("hidden");
       attachmentBar.classList.add("hidden");
       reportSection.classList.add("hidden");
       heroSection.classList.remove("compact");
@@ -2474,7 +1301,24 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     document.getElementById("clearBtn").addEventListener("click", resetWorkspace);
     document.getElementById("navNewBtn").addEventListener("click", resetWorkspace);
 
-    // Modals (History & Rubric)
+    document.getElementById("copyDraftBtn").addEventListener("click", async () => {
+      const text = manuscriptText.value.trim();
+      if (!text) {
+        setStatus("Nothing to copy yet.", true);
+        return;
+      }
+      await navigator.clipboard.writeText(text);
+      setStatus("Copied your current draft to the clipboard!");
+    });
+
+    undoBtn.addEventListener("click", () => {
+      if (undoStack.length === 0) return;
+      manuscriptText.value = undoStack.pop();
+      if (undoStack.length === 0) undoBtn.classList.add("hidden");
+      setStatus("Undid your last word swap.");
+    });
+
+    // Modals
     document.getElementById("closeInfoModalBtn").addEventListener("click", () => {
       infoModal.classList.add("hidden");
     });
@@ -2484,16 +1328,16 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     });
 
     document.getElementById("navHistoryBtn").addEventListener("click", () => {
-      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
-      infoModalTitle.textContent = "Recent Audits";
+      const history = JSON.parse(localStorage.getItem("friendly_studio_history") || "[]");
+      infoModalTitle.textContent = "Recent Checks";
       if (history.length === 0) {
-        infoModalBody.innerHTML = "<p>No saved audits in this browser yet. Run an audit to save it automatically.</p>";
+        infoModalBody.innerHTML = "<p>No saved checks yet. Check a draft and it will appear here.</p>";
       } else {
         infoModalBody.innerHTML = history.map((entry, idx) => `
           <div class="history-item">
             <div>
               <strong style="color: var(--text-primary);">${escapeHtml(entry.manuscript)}</strong>
-              <div style="font-size: 12px;">${entry.total_words.toLocaleString()} words • ${entry.total_findings} flags • Score ${entry.overall_ai_style_score}/100</div>
+              <div style="font-size: 12px;">${entry.total_words.toLocaleString()} words • ${entry.total_findings} suggestions • Natural Score ${entry.natural_score}%</div>
             </div>
             <button type="button" class="btn-light-pill" onclick="loadHistoryReport(${idx})">Open</button>
           </div>
@@ -2503,7 +1347,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     });
 
     window.loadHistoryReport = (idx) => {
-      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("friendly_studio_history") || "[]");
       if (!history[idx]) return;
       currentReport = history[idx];
       currentFileName = currentReport.manuscript;
@@ -2513,54 +1357,43 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       renderReport();
     };
 
-    document.getElementById("navRubricBtn").addEventListener("click", () => {
-      infoModalTitle.textContent = "Detection Rubric & Literature API";
+    document.getElementById("navGuideBtn").addEventListener("click", () => {
+      infoModalTitle.textContent = "How Article Studio Helps";
       infoModalBody.innerHTML = `
-        <p><strong>1. Overused AI Buzzwords &amp; Inflated Words</strong><br>
-        Flags inflated verbs (<em>delve, underscore, leverage, foster</em>), adjectives (<em>pivotal, transformative, seamless, robust</em>), nouns (<em>tapestry, testament, landscape, paradigm</em>), and adverbs (<em>meticulously, seamlessly, profoundly</em>).</p>
-        <p><strong>2. Formulaic Transitions &amp; Stock Phrases</strong><br>
-        Flags repetitive sentence-initial adverbs (<em>Furthermore, Moreover, Additionally</em>), rigid list signposts (<em>Firstly, Secondly, In summary</em>), and filler phrases (<em>It is important to note that, In today's fast-paced digital landscape</em>).</p>
-        <p><strong>3. Disembodied / Automated Phrasing &amp; Passive Agency</strong><br>
-        Flags passive verb constructions and sentences where software, algorithms, or abstract concepts perform human-agency verbs without a human subject.</p>
-        <p><strong>4. OpenAlex Published Article Finder</strong><br>
-        Click any green replacement pill on a flagged item to search 250M+ peer-reviewed works and inspect real sentences showing how human authors use that replacement word.</p>
+        <p><strong>1. Spot AI-Sounding Habits</strong><br>
+        We highlight inflated buzzwords (like <em>delve, leverage, tapestry, pivotal</em>), repetitive sentence starters (<em>Furthermore, Moreover</em>), and passive sentences where software acts without a human subject.</p>
+        <p><strong>2. Click Any Green Replacement Pill</strong><br>
+        Clicking a suggested word searches <strong>OpenAlex</strong> (250M+ peer-reviewed papers) to show you real sentences written by human researchers—and gives you a one-click <strong>Swap in My Draft</strong> button.</p>
+        <p><strong>3. Export Clean Text</strong><br>
+        Once you've swapped the phrases you want, click <strong>Copy Text</strong> or <strong>Save Edited .TXT</strong> to take your polished draft with you.</p>
       `;
       infoModal.classList.remove("hidden");
     });
 
     document.getElementById("navExportBtn").addEventListener("click", () => {
       if (!currentReport) {
-        setStatus("Run an audit first before exporting.", true);
+        setStatus("Check a draft first before exporting.", true);
         return;
       }
       document.getElementById("downloadMdBtn").click();
     });
 
-    // Quick-Action Chips
+    // Quick-Action Filter Chips
     document.querySelectorAll(".action-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         const action = chip.dataset.action;
-        if (action === "sample") {
-          loadSampleText();
-          return;
-        }
-        if (action === "audit") {
-          runAudit("All");
-          return;
-        }
         if (currentReport) {
-          activeCategory = `GROUP:${action}`;
+          activeCategory = action;
           renderReport();
           reportSection.scrollIntoView({ behavior: "smooth" });
         } else {
-          runAudit(`GROUP:${action}`);
+          runCheck(action);
         }
       });
     });
 
-    analyzeBtn.addEventListener("click", () => runAudit("All"));
+    analyzeBtn.addEventListener("click", () => runCheck("All"));
 
-    // Sentence Splitter with Abbreviation & Decimal Protection
     function splitSentences(paragraph) {
       let protectedText = paragraph;
       const abbreviations = [
@@ -2579,11 +1412,10 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         .filter(Boolean);
     }
 
-    // Core Offline Audit Engine
-    function runAudit(initialFilter = "All") {
+    function runCheck(initialFilter = "All") {
       const text = manuscriptText.value.trim();
       if (!text) {
-        setStatus("Paste manuscript text or attach a file first.", true);
+        setStatus("Paste some text or upload a file first.", true);
         return;
       }
 
@@ -2595,14 +1427,6 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       const wordMatches = text.match(/\b\w+(?:[-']\w+)*\b/g);
       const totalWords = wordMatches ? wordMatches.length : 0;
       let totalSentences = 0;
-      let sentenceInitialHits = 0;
-
-      const lexiconGroups = [
-        ["Inflated Verb", INFLATED_VERBS, "Overused AI action buzzword that inflates routine actions."],
-        ["Inflated Adjective", INFLATED_ADJECTIVES, "Vague promotional qualifier favored by LLMs."],
-        ["Inflated Noun", INFLATED_NOUNS, "Abstract metaphor or buzzword noun overrepresented in AI prose."],
-        ["Inflated Adverb", INFLATED_ADVERBS, "Intensifying adverb that pads claims without adding data."]
-      ];
 
       paragraphs.forEach((para, pIdx) => {
         const secNum = pIdx + 1;
@@ -2611,110 +1435,71 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         sentences.forEach((sent) => {
           totalSentences += 1;
 
-          // 1. Inflated Lexicon
-          for (const [category, list, reason] of lexiconGroups) {
-            for (const [pattern, suggestion, replacements] of list) {
-              const rx = new RegExp(pattern, "gi");
-              for (const match of sent.matchAll(rx)) {
-                findings.push({
-                  id: findings.length,
-                  section: secNum,
-                  sentence_num: totalSentences,
-                  category,
-                  matched_phrase: match[0],
-                  sentence_context: sent,
-                  reason,
-                  suggestion,
-                  replacements
-                });
-              }
-            }
-          }
-
-          // 2A. Sentence-Initial Adverbs
-          for (const [pattern, suggestion, replacements] of SENTENCE_INITIAL_ADVERBS) {
-            const match = sent.match(new RegExp(pattern, "i"));
-            if (match) {
-              sentenceInitialHits += 1;
-              findings.push({
-                id: findings.length,
-                section: secNum,
-                sentence_num: totalSentences,
-                category: "Sentence-Initial Adverb",
-                matched_phrase: match[0],
-                sentence_context: sent,
-                reason: "Formulaic sentence-opening adverb commonly chained by AI models.",
-                suggestion,
-                replacements
-              });
-            }
-          }
-
-          // 2B. Rigid List Signposts
-          for (const [pattern, suggestion, replacements] of RIGID_LIST_SIGNPOSTS) {
-            const match = sent.match(new RegExp(pattern, "i"));
-            if (match) {
-              findings.push({
-                id: findings.length,
-                section: secNum,
-                sentence_num: totalSentences,
-                category: "Rigid List Signpost",
-                matched_phrase: match[0],
-                sentence_context: sent,
-                reason: "Mechanical structural signpost typical of templated LLM outlines.",
-                suggestion,
-                replacements
-              });
-            }
-          }
-
-          // 2C. Filler Phrases
-          for (const [pattern, suggestion, replacements] of FILLER_PHRASES) {
+          // 1. Robotic Buzzwords
+          for (const [pattern, tip, replacements] of BUZZWORD_PATTERNS) {
             const rx = new RegExp(pattern, "gi");
             for (const match of sent.matchAll(rx)) {
               findings.push({
                 id: findings.length,
                 section: secNum,
                 sentence_num: totalSentences,
-                category: "Filler Phrase",
+                category: "Robotic Buzzwords",
                 matched_phrase: match[0],
                 sentence_context: sent,
-                reason: "Empty stock throat-clearing phrase that adds word count without meaning.",
-                suggestion,
-                replacements
+                tip,
+                replacements,
+                resolved_with: null
               });
             }
           }
 
-          // 3A. Disembodied / Automated Phrasing
-          for (const match of sent.matchAll(new RegExp(ABSTRACT_SUBJECT_PATTERN, "gi"))) {
+          // 2. Wordy Openers & Fillers
+          for (const [pattern, tip, replacements] of OPENER_AND_FILLER_PATTERNS) {
+            const rx = new RegExp(pattern, "gi");
+            for (const match of sent.matchAll(rx)) {
+              findings.push({
+                id: findings.length,
+                section: secNum,
+                sentence_num: totalSentences,
+                category: "Wordy Openers & Fillers",
+                matched_phrase: match[0],
+                sentence_context: sent,
+                tip,
+                replacements,
+                resolved_with: null
+              });
+            }
+          }
+
+          // 3A. Non-Human Subject Agency
+          for (const match of sent.matchAll(new RegExp(ABSTRACT_AGENCY_REGEX, "gi"))) {
             findings.push({
               id: findings.length,
               section: secNum,
               sentence_num: totalSentences,
-              category: "Disembodied / Automated Phrasing",
+              category: "Passive / Non-Human Phrasing",
               matched_phrase: match[0].trim(),
               sentence_context: sent,
-              reason: "Non-human tool, model, or abstract noun performs a human-agency verb.",
-              suggestion: "Name the human actor (e.g., 'We evaluated...' or 'Clinicians applied...').",
-              replacements: ["We evaluated", "We analyzed", "Researchers applied"]
+              tip: "A tool or abstract noun is acting like a person—try naming the researcher or user.",
+              replacements: ["We evaluated", "We analyzed", "Researchers used"],
+              resolved_with: null
             });
           }
 
-          // 3B. Passive Constructions
-          for (const match of sent.matchAll(new RegExp(PASSIVE_VOICE_PATTERN, "gi"))) {
+          // 3B. Passive Voice
+          for (const match of sent.matchAll(new RegExp(PASSIVE_VOICE_REGEX, "gi"))) {
             const participle = (match[1] || "").toLowerCase();
-            if (PASSIVE_FALSE_POSITIVES.has(participle)) continue;
+            if (PASSIVE_IGNORE.has(participle)) continue;
             findings.push({
               id: findings.length,
               section: secNum,
               sentence_num: totalSentences,
-              category: "Passive Construction",
+              category: "Passive / Non-Human Phrasing",
               matched_phrase: match[0],
               sentence_context: sent,
-              reason: "Passive verb construction obscures who performed the action.",
-              suggestion: "Convert to active voice with an explicit human subject where appropriate.",
-              replacements: ["We measured", "Authors identified", "We observed"]
+              tip: "Passive phrasing hides who did the action—active voice is usually clearer.",
+              replacements: ["We measured", "We observed", "Authors found"],
+              resolved_with: null
             });
           }
         });
@@ -2726,27 +1511,13 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       }
 
       const safeWords = Math.max(1, totalWords);
-      const safeSentences = Math.max(1, totalSentences);
-
-      const weightedPoints =
-        (counts["Inflated Verb"] || 0) * 2.5 +
-        (counts["Inflated Adjective"] || 0) * 2.2 +
-        (counts["Inflated Noun"] || 0) * 2.5 +
-        (counts["Inflated Adverb"] || 0) * 2.0 +
-        (counts["Sentence-Initial Adverb"] || 0) * 3.0 +
-        (counts["Rigid List Signpost"] || 0) * 3.0 +
-        (counts["Filler Phrase"] || 0) * 3.5 +
-        (counts["Disembodied / Automated Phrasing"] || 0) * 3.0 +
-        (counts["Passive Construction"] || 0) * 1.2;
-
-      const densityScore = (weightedPoints / safeWords) * 180;
-      const transitionBonus = (sentenceInitialHits / safeSentences) * 35;
-      const overallScore = Math.min(100, Math.round(densityScore + transitionBonus));
+      const aiDensity = Math.min(100, Math.round((findings.length / safeWords) * 320));
+      const naturalScore = Math.max(5, 100 - aiDensity);
 
       currentReport = {
         manuscript: currentFileName,
         detected_topic: detectedTopic,
-        overall_ai_style_score: overallScore,
+        natural_score: naturalScore,
         total_words: totalWords,
         total_sentences: totalSentences,
         total_findings: findings.length,
@@ -2754,17 +1525,57 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         findings
       };
 
-      const history = JSON.parse(localStorage.getItem("offline_audit_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("friendly_studio_history") || "[]");
       history.unshift(currentReport);
-      localStorage.setItem("offline_audit_history", JSON.stringify(history.slice(0, 10)));
+      localStorage.setItem("friendly_studio_history", JSON.stringify(history.slice(0, 10)));
 
       activeCategory = initialFilter;
       renderReport();
-      setStatus(`Audit complete (${totalWords.toLocaleString()} words). Click any green replacement word below to find published articles using it.`);
+      setStatus(`Found ${findings.length} spot(s) to polish. Click any green word below to see real paper examples or swap it in.`);
     }
 
     // -----------------------------------------------------------------------
-    // OPENALEX SCHOLARLY API: FIND PUBLISHED ARTICLES WITH REPLACEMENT WORDS
+    // 2. ONE-CLICK WORD SWAP IN MANUSCRIPT
+    // -----------------------------------------------------------------------
+    function matchCase(original, replacement) {
+      if (!original) return replacement;
+      if (original === original.toUpperCase() && original.length > 1) {
+        return replacement.toUpperCase();
+      }
+      if (original[0] === original[0].toUpperCase()) {
+        return replacement[0].toUpperCase() + replacement.slice(1);
+      }
+      return replacement;
+    }
+
+    window.applySwapToDraft = function(findingId, replacementWord) {
+      if (!currentReport) return;
+      const item = currentReport.findings.find(f => f.id === findingId);
+      if (!item) return;
+
+      const currentText = manuscriptText.value;
+      const target = item.matched_phrase;
+      const escapedTarget = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const rx = new RegExp(escapedTarget, "i");
+
+      if (!rx.test(currentText)) {
+        setStatus(`Could not find "${target}" in the draft (it may have already been updated).`, true);
+        return;
+      }
+
+      undoStack.push(currentText);
+      undoBtn.classList.remove("hidden");
+
+      const adjustedReplacement = matchCase(target, replacementWord);
+      manuscriptText.value = currentText.replace(rx, adjustedReplacement);
+
+      item.resolved_with = adjustedReplacement;
+      renderReport();
+      setStatus(`Swapped "${target}" → "${adjustedReplacement}" in your draft!`);
+    };
+
+    // -----------------------------------------------------------------------
+    // 3. OPENALEX SCHOLARLY API: FIND REAL PUBLISHED SENTENCES
     // -----------------------------------------------------------------------
     function reconstructAbstract(invertedIndex) {
       if (!invertedIndex || typeof invertedIndex !== "object") return "";
@@ -2779,12 +1590,11 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
     }
 
     function buildWordFamilyRegex(phrase) {
-      const clean = phrase.trim();
+      const clean = phrase.replace(/[,.:;!?]+$/, "").trim();
       const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (clean.includes(" ")) {
         return new RegExp(`\\b${escaped}\\b`, "gi");
       }
-      // Match inflected verb/noun forms (e.g. examine -> examines/examined/examining, apply -> applies/applied)
       let stem = escaped;
       if (clean.endsWith("e") && clean.length > 3) {
         stem = escaped.slice(0, -1) + "(?:e|es|ed|ing)";
@@ -2798,76 +1608,17 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
     async function queryOpenAlex(searchQuery) {
       const url =
-        `[https://api.openalex.org/works?filter=has_abstract:true,type:article](https://api.openalex.org/works?filter=has_abstract:true,type:article)` +
+        `https://api.openalex.org/works?filter=has_abstract:true,type:article` +
         `&search=${encodeURIComponent(searchQuery)}` +
         `&per-page=10` +
         `&select=id,doi,display_name,publication_year,cited_by_count,authorships,primary_location,abstract_inverted_index` +
         `&mailto=article-studio@users.noreply.github.com`;
 
       const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`OpenAlex API returned HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`API status ${res.status}`);
       const data = await res.json();
       return data.results || [];
     }
-
-    window.findReplacementArticles = async function(findingId, replacementWord) {
-      const panel = document.getElementById(`articles-panel-${findingId}`);
-      const resultsBox = document.getElementById(`articles-results-${findingId}`);
-      const activeWordSpan = document.getElementById(`active-rep-word-${findingId}`);
-      if (!panel || !resultsBox) return;
-
-      // Highlight active pill
-      document.querySelectorAll(`[data-finding-pills="${findingId}"] .rep-word-btn`).forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.word === replacementWord);
-      });
-
-      panel.classList.remove("hidden");
-      activeWordSpan.textContent = `"${replacementWord}"`;
-
-      const topic = useTopicCheck.checked ? topicContextInput.value.trim() : "";
-      const cacheKey = `${replacementWord.toLowerCase()}||${topic.toLowerCase()}`;
-
-      if (articleCache.has(cacheKey)) {
-        renderArticleHits(resultsBox, articleCache.get(cacheKey), replacementWord);
-        return;
-      }
-
-      resultsBox.innerHTML = `<p class="muted-text">Searching OpenAlex peer-reviewed articles for <strong>"${escapeHtml(replacementWord)}"</strong>${topic ? ` in <em>${escapeHtml(topic)}</em>` : ""}...</p>`;
-
-      try {
-        const primaryQuery = topic ? `"${replacementWord}" ${topic}` : `"${replacementWord}"`;
-        let works = await queryOpenAlex(primaryQuery);
-        let hits = extractMatchingSentences(works, replacementWord);
-
-        // Broaden search automatically if scoped domain query yielded fewer than 2 sentence hits
-        if (hits.length < 2 && topic) {
-          const broadWorks = await queryOpenAlex(`"${replacementWord}"`);
-          const broadHits = extractMatchingSentences(broadWorks, replacementWord);
-          const seenDois = new Set(hits.map(h => h.url));
-          for (const item of broadHits) {
-            if (!seenDois.has(item.url)) {
-              hits.push(item);
-              seenDois.add(item.url);
-            }
-          }
-        }
-
-        const topHits = hits.slice(0, 4);
-        articleCache.set(cacheKey, topHits);
-        renderArticleHits(resultsBox, topHits, replacementWord);
-      } catch (err) {
-        resultsBox.innerHTML = `<p class="status error" style="text-align:left;margin:0;">Article lookup failed: ${escapeHtml(err.message)}</p>`;
-      }
-    };
-
-    window.searchCustomReplacement = function(findingId) {
-      const input = document.getElementById(`custom-rep-input-${findingId}`);
-      const word = (input?.value || "").trim();
-      if (!word) return;
-      window.findReplacementArticles(findingId, word);
-    };
 
     function extractMatchingSentences(works, replacementWord) {
       const familyRx = buildWordFamilyRegex(replacementWord);
@@ -2885,7 +1636,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
 
         if (!matchingSent) continue;
 
-        const firstAuthor = work.authorships?.[0]?.author?.display_name || "Unknown Author";
+        const firstAuthor = work.authorships?.[0]?.author?.display_name || "Research Team";
         const authorLabel = (work.authorships?.length || 0) > 1 ? `${firstAuthor} et al.` : firstAuthor;
         const venue = work.primary_location?.source?.display_name || "Peer-Reviewed Journal";
         const year = work.publication_year || "n.d.";
@@ -2905,9 +1656,89 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       return matchedArticles;
     }
 
+    window.selectReplacementOption = async function(findingId, repIndex) {
+      if (!currentReport) return;
+      const item = currentReport.findings.find(f => f.id === findingId);
+      if (!item) return;
+
+      const word = item.replacements[repIndex];
+      if (!word) return;
+
+      await openArticlesForWord(findingId, word);
+    };
+
+    window.searchCustomReplacement = async function(findingId) {
+      const input = document.getElementById(`custom-rep-input-${findingId}`);
+      const word = (input?.value || "").trim();
+      if (!word) return;
+      await openArticlesForWord(findingId, word);
+    };
+
+    async function openArticlesForWord(findingId, replacementWord) {
+      const item = currentReport.findings.find(f => f.id === findingId);
+      const panel = document.getElementById(`articles-panel-${findingId}`);
+      const resultsBox = document.getElementById(`articles-results-${findingId}`);
+      const headerBox = document.getElementById(`articles-header-${findingId}`);
+      if (!item || !panel || !resultsBox || !headerBox) return;
+
+      document.querySelectorAll(`[data-finding-pills="${findingId}"] .rep-word-btn`).forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.word === replacementWord);
+      });
+
+      panel.classList.remove("hidden");
+
+      headerBox.innerHTML = "";
+      const titleSpan = document.createElement("span");
+      titleSpan.innerHTML = `Real papers using <strong>"${escapeHtml(replacementWord)}"</strong>`;
+
+      const swapBtn = document.createElement("button");
+      swapBtn.type = "button";
+      swapBtn.className = "swap-btn";
+      swapBtn.textContent = `Swap "${item.matched_phrase}" → "${replacementWord}"`;
+      swapBtn.addEventListener("click", () => window.applySwapToDraft(findingId, replacementWord));
+
+      headerBox.appendChild(titleSpan);
+      headerBox.appendChild(swapBtn);
+
+      const topic = useTopicCheck.checked ? topicContextInput.value.trim() : "";
+      const cacheKey = `${replacementWord.toLowerCase()}||${topic.toLowerCase()}`;
+
+      if (articleCache.has(cacheKey)) {
+        renderArticleHits(resultsBox, articleCache.get(cacheKey), replacementWord);
+        return;
+      }
+
+      resultsBox.innerHTML = `<p class="muted-text">Looking up published sentences using <strong>"${escapeHtml(replacementWord)}"</strong>...</p>`;
+
+      try {
+        const cleanQueryWord = replacementWord.replace(/[,.:;!?]+$/, "").trim();
+        const primaryQuery = topic ? `"${cleanQueryWord}" ${topic}` : `"${cleanQueryWord}"`;
+        let works = await queryOpenAlex(primaryQuery);
+        let hits = extractMatchingSentences(works, cleanQueryWord);
+
+        if (hits.length < 2 && topic) {
+          const broadWorks = await queryOpenAlex(`"${cleanQueryWord}"`);
+          const broadHits = extractMatchingSentences(broadWorks, cleanQueryWord);
+          const seen = new Set(hits.map(h => h.url));
+          for (const h of broadHits) {
+            if (!seen.has(h.url)) {
+              hits.push(h);
+              seen.add(h.url);
+            }
+          }
+        }
+
+        const topHits = hits.slice(0, 3);
+        articleCache.set(cacheKey, topHits);
+        renderArticleHits(resultsBox, topHits, cleanQueryWord);
+      } catch (err) {
+        resultsBox.innerHTML = `<p class="muted-text">Could not load article examples right now (${escapeHtml(err.message)}). You can still click the green Swap button above!</p>`;
+      }
+    }
+
     function renderArticleHits(container, hits, replacementWord) {
       if (!hits || hits.length === 0) {
-        container.innerHTML = `<p class="muted-text">No abstract sentences matched "${escapeHtml(replacementWord)}". Try another replacement word or uncheck "Scope to my topic".</p>`;
+        container.innerHTML = `<p class="muted-text">No abstract sentences matched "${escapeHtml(replacementWord)}"—try another word or uncheck "Match my topic".</p>`;
         return;
       }
 
@@ -2925,7 +1756,7 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
               ${escapeHtml(hit.title)} &#8599;
             </a>
             <div class="article-meta">
-              ${escapeHtml(hit.authors)} (${escapeHtml(String(hit.year))}) • <em>${escapeHtml(hit.venue)}</em> • Cited by ${hit.citations.toLocaleString()}
+              ${escapeHtml(hit.authors)} (${escapeHtml(String(hit.year))}) • <em>${escapeHtml(hit.venue)}</em> • Cited ${hit.citations.toLocaleString()} times
             </div>
             <div class="article-sentence">${safeSentence}</div>
           </div>
@@ -2939,18 +1770,14 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       heroSection.classList.add("compact");
       reportSection.classList.remove("hidden");
 
-      const score = currentReport.overall_ai_style_score;
-      scoreBadge.textContent = `AI Style Score: ${score}/100`;
-      scoreBadge.style.color = score >= 65 ? "var(--danger)" : score >= 35 ? "var(--warn)" : "var(--success)";
+      const score = currentReport.natural_score;
+      scoreBadge.textContent = `Natural Style: ${score}%`;
+      scoreBadge.style.color = score >= 75 ? "var(--success)" : score >= 45 ? "var(--amber-text)" : "var(--danger)";
 
-      reportStats.textContent = `${currentReport.total_words.toLocaleString()} words • ${currentReport.total_sentences.toLocaleString()} sentences • ${currentReport.total_findings} flagged instance(s)`;
+      const resolvedCount = currentReport.findings.filter(f => f.resolved_with).length;
+      reportStats.textContent = `${currentReport.total_words.toLocaleString()} words • ${currentReport.total_findings} suggestion(s) • ${resolvedCount} swapped`;
 
-      const entries = Object.entries(currentReport.category_breakdown).sort((a, b) => b[1] - a[1]);
-      breakdownBox.innerHTML = entries.length === 0
-        ? `<div class="breakdown-pill">No AI-favored buzzwords, stock transitions, or passive agency patterns detected.</div>`
-        : entries.map(([cat, count]) => `<div class="breakdown-pill">${escapeHtml(cat)}: <strong>${count}</strong></div>`).join("");
-
-      const categories = ["All", ...Object.keys(currentReport.category_breakdown)];
+      const categories = ["All", "Robotic Buzzwords", "Wordy Openers & Fillers", "Passive / Non-Human Phrasing"];
       filterBar.innerHTML = "";
       categories.forEach(cat => {
         const count = cat === "All"
@@ -2968,65 +1795,67 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
         filterBar.appendChild(btn);
       });
 
-      let visible = currentReport.findings;
-      if (activeCategory.startsWith("GROUP:")) {
-        const groupKey = activeCategory.split(":")[1];
-        const allowed = CATEGORY_GROUPS[groupKey] || [];
-        visible = currentReport.findings.filter(f => allowed.includes(f.category));
-      } else if (activeCategory !== "All") {
-        visible = currentReport.findings.filter(f => f.category === activeCategory);
+      const visible = activeCategory === "All"
+        ? currentReport.findings
+        : currentReport.findings.filter(f => f.category === activeCategory);
+
+      if (visible.length === 0) {
+        findingsList.innerHTML = `<p class="muted-text" style="padding:12px 0;">Looks clean! No issues found in this category.</p>`;
+        return;
       }
 
-      findingsList.innerHTML = visible.length === 0
-        ? `<p class="muted-text">No instances flagged in this category.</p>`
-        : visible.map((item, idx) => {
-          const repButtons = (item.replacements || []).map(word => `
-            <button
-              type="button"
-              class="rep-word-btn"
-              data-word="${escapeHtml(word)}"
-              onclick="findReplacementArticles(${item.id}, '${escapeHtml(word).replace(/'/g, "\\'")}')"
-              title="Search published papers using '${escapeHtml(word)}'"
-            >
-              <span>&#128269; ${escapeHtml(word)}</span>
-            </button>
-          `).join("");
+      findingsList.innerHTML = visible.map((item, idx) => {
+        const escapedPhrase = escapeHtml(item.matched_phrase);
+        const escapedSentence = escapeHtml(item.sentence_context).replace(
+          new RegExp(escapedPhrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"),
+          m => `<mark>${m}</mark>`
+        );
 
-          return `
-            <div class="finding">
-              <div class="finding-top">
-                <span class="matched-word">#${idx + 1} "${escapeHtml(item.matched_phrase)}"</span>
-                <span class="cat-tag">Para ${item.section} • Sent ${item.sentence_num} • ${escapeHtml(item.category)}</span>
-              </div>
-              <div class="detail-line"><span class="detail-label">Sentence:</span> ${escapeHtml(item.sentence_context)}</div>
-              <div class="detail-line"><span class="detail-label">Why:</span> ${escapeHtml(item.reason)}</div>
-              <div class="detail-line rewrite-text"><span class="detail-label">Guidance:</span> ${escapeHtml(item.suggestion)}</div>
+        const pillsHtml = (item.replacements || []).map((word, rIdx) => `
+          <button
+            type="button"
+            class="rep-word-btn"
+            data-word="${escapeHtml(word)}"
+            onclick="selectReplacementOption(${item.id}, ${rIdx})"
+            title="See published articles using '${escapeHtml(word)}' & swap in draft"
+          >
+            <span>${escapeHtml(word)}</span>
+          </button>
+        `).join("");
 
-              <div class="replacement-row" data-finding-pills="${item.id}">
-                <span class="rep-label">Find published articles using:</span>
-                ${repButtons}
-              </div>
+        const statusTag = item.resolved_with
+          ? `<span class="matched-word">Swapped → "${escapeHtml(item.resolved_with)}" &#10003;</span>`
+          : `<span class="matched-word">#${idx + 1} "${escapedPhrase}"</span>`;
 
-              <div id="articles-panel-${item.id}" class="articles-panel hidden">
-                <div class="articles-panel-header">
-                  <span>Published Articles Using <strong id="active-rep-word-${item.id}"></strong></span>
-                  <div class="custom-rep-form">
-                    <input
-                      type="text"
-                      id="custom-rep-input-${item.id}"
-                      class="custom-rep-input"
-                      placeholder="Try another word..."
-                      onkeydown="if(event.key==='Enter'){searchCustomReplacement(${item.id});}"
-                    />
-                    <button type="button" class="btn-light-pill" style="padding:4px 10px;font-size:12px;" onclick="searchCustomReplacement(${item.id})">Search</button>
-                    <button type="button" class="chip-close" title="Close" onclick="document.getElementById('articles-panel-${item.id}').classList.add('hidden')">&times;</button>
-                  </div>
-                </div>
-                <div id="articles-results-${item.id}"></div>
-              </div>
+        return `
+          <div class="finding ${item.resolved_with ? "resolved" : ""}">
+            <div class="finding-top">
+              ${statusTag}
+              <span class="cat-tag">Paragraph ${item.section} • ${escapeHtml(item.category)}</span>
             </div>
-          `;
-        }).join("");
+
+            <div class="sentence-box">${escapedSentence}</div>
+            <p class="tip-line">${escapeHtml(item.tip)}</p>
+
+            <div class="replacement-row" data-finding-pills="${item.id}">
+              <span class="rep-label">Try instead (click for paper examples &amp; swap):</span>
+              ${pillsHtml}
+              <input
+                type="text"
+                id="custom-rep-input-${item.id}"
+                class="custom-rep-input"
+                placeholder="Or type your own..."
+                onkeydown="if(event.key==='Enter'){searchCustomReplacement(${item.id});}"
+              />
+            </div>
+
+            <div id="articles-panel-${item.id}" class="articles-panel hidden">
+              <div class="articles-panel-header" id="articles-header-${item.id}"></div>
+              <div id="articles-results-${item.id}"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     function triggerDownload(content, filename, mimeType) {
@@ -3039,48 +1868,36 @@ Open **`https://github.com/zkri-saber/Article-Studio/edit/main/index.html`**, se
       URL.revokeObjectURL(url);
     }
 
-    document.getElementById("downloadJsonBtn").addEventListener("click", () => {
-      if (!currentReport) return;
-      triggerDownload(
-        JSON.stringify(currentReport, null, 2),
-        `${currentFileName}_ai_style_audit.json`,
-        "application/json"
-      );
+    document.getElementById("downloadCleanTxtBtn").addEventListener("click", () => {
+      const text = manuscriptText.value.trim();
+      if (!text) return;
+      triggerDownload(text, `${currentFileName}_edited.txt`, "text/plain");
     });
 
     document.getElementById("downloadMdBtn").addEventListener("click", () => {
       if (!currentReport) return;
       const lines = [
-        `# AI Style & Phrasing Audit: \`${currentReport.manuscript}\``,
+        `# Writing Polish Report: \`${currentReport.manuscript}\``,
         "",
-        `- **AI Style Score:** ${currentReport.overall_ai_style_score}/100`,
+        `- **Natural Style Score:** ${currentReport.natural_score}%`,
         `- **Word Count:** ${currentReport.total_words.toLocaleString()}`,
-        `- **Sentence Count:** ${currentReport.total_sentences.toLocaleString()}`,
-        `- **Flagged Instances:** ${currentReport.total_findings}`,
+        `- **Suggestions:** ${currentReport.total_findings}`,
         "",
-        "## Category Breakdown",
+        "## Suggestions",
         ""
       ];
 
-      Object.entries(currentReport.category_breakdown)
-        .sort((a, b) => b[1] - a[1])
-        .forEach(([cat, count]) => lines.push(`- **${cat}:** ${count}`));
-
-      lines.push("", "## Flagged Phrases & Replacement Candidates", "");
-
       currentReport.findings.forEach((f, idx) => {
-        const reps = (f.replacements || []).join(", ");
         lines.push(
-          `### ${idx + 1}. [${f.category}] \`${f.matched_phrase}\` (Paragraph ${f.section}, Sentence ${f.sentence_num})`,
+          `### ${idx + 1}. "${f.matched_phrase}" (${f.category})`,
           `- **Sentence:** ${f.sentence_context}`,
-          `- **Why flagged:** ${f.reason}`,
-          `- **Edit guidance:** ${f.suggestion}`,
-          `- **Replacement words:** ${reps}`,
+          `- **Tip:** ${f.tip}`,
+          `- **Alternatives:** ${(f.replacements || []).join(", ")}`,
           ""
         );
       });
 
-      triggerDownload(lines.join("\n"), `${currentFileName}_ai_style_audit.md`, "text/markdown");
+      triggerDownload(lines.join("\n"), `${currentFileName}_writing_report.md`, "text/markdown");
     });
   </script>
 </body>
